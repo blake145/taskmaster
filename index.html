@@ -803,12 +803,60 @@ function addTask(title, priority, category, remind) {
     done: false,
     remind: remind || null,
     created: new Date().toISOString(),
-    completedAt: null
+    completedAt: null,
+    calEventId: null
   };
   tasks.unshift(task);
   saveTasks();
-  if (remind) scheduleReminder(task);
+  if (remind) {
+    scheduleReminder(task);
+    // Auto-add to Google Calendar if reminder is set and user is online with OAuth configured
+    if (isOnline && config.oauthClientId) {
+      autoAddToCalendar(task);
+    }
+  }
   return task;
+}
+
+async function autoAddToCalendar(task) {
+  if (!task.remind) return;
+  try {
+    const token = await getGoogleToken();
+    if (!token) return;
+
+    const start = new Date(task.remind);
+    const end = new Date(start.getTime() + 60 * 60000); // default 1 hour
+    const calId = config.calId || 'primary';
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    const event = {
+      summary: task.title,
+      description: `Category: ${catLabel(task.category)}\nPriority: ${task.priority}\nAdded via TaskMaster AI`,
+      start: { dateTime: start.toISOString(), timeZone: tz },
+      end: { dateTime: end.toISOString(), timeZone: tz },
+      reminders: { useDefault: true }
+    };
+
+    const res = await fetch(
+      `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calId)}/events`,
+      {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(event)
+      }
+    );
+
+    if (res.ok) {
+      const data = await res.json();
+      task.calEventId = data.id;
+      task.calEventLink = data.htmlLink;
+      // Save silently without re-triggering another calendar add
+      localStorage.setItem('tm_tasks', JSON.stringify(tasks));
+      showToast('📅 Auto-added to Google Calendar!');
+    }
+  } catch(e) {
+    console.error('Auto calendar add failed:', e);
+  }
 }
 
 function toggleDone(id) {
@@ -1145,7 +1193,15 @@ function confirmReminder() {
   const val = document.getElementById('custom-remind-time').value;
   if (!val) { showToast('⚠️ Pick a time'); return; }
   const t = tasks.find(t => t.id === remindTaskId);
-  if (t) { t.remind = val; saveTasks(); scheduleReminder(t); }
+  if (t) {
+    t.remind = val;
+    saveTasks();
+    scheduleReminder(t);
+    // Auto-add to Google Calendar if online and OAuth configured
+    if (isOnline && config.oauthClientId && !t.calEventId) {
+      autoAddToCalendar(t);
+    }
+  }
   closeModal('modal-remind');
   showToast('⏰ Reminder set!');
 }

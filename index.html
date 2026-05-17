@@ -366,7 +366,7 @@
   <div class="status-row">
     <div class="status-dot" id="statusDot"></div>
     <span class="status-label" id="statusLabel">Online</span>
-    <button class="sync-btn" onclick="syncToDrive()">⟳ Sync</button>
+    <button class="sync-btn" onclick="syncFromDrive().then(()=>syncToDrive())">⟳ Sync</button>
   </div>
 </div>
 
@@ -628,15 +628,18 @@ let remindTaskId = null;
 let isOnline = navigator.onLine;
 
 // ── Init ──
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
   loadConfig();
   renderAll();
   updateOnlineStatus();
   checkReminders();
-  if (isOnline) getAISuggestion();
+  if (isOnline) {
+    await syncFromDrive(); // Pull from Drive first
+    getAISuggestion();
+  }
 });
 
-window.addEventListener('online', () => { isOnline = true; updateOnlineStatus(); syncToDrive(); getAISuggestion(); });
+window.addEventListener('online', () => { isOnline = true; updateOnlineStatus(); syncFromDrive().then(() => syncToDrive()); getAISuggestion(); });
 window.addEventListener('offline', () => { isOnline = false; updateOnlineStatus(); });
 
 function updateOnlineStatus() {
@@ -791,6 +794,8 @@ function requestToken(resolve) {
 
 // ── Task CRUD ──
 function saveTasks() {
+  // Stamp updatedAt on all tasks so merge can compare recency
+  tasks = tasks.map(t => ({ ...t, updatedAt: new Date().toISOString() }));
   localStorage.setItem('tm_tasks', JSON.stringify(tasks));
   renderAll();
   if (isOnline) syncToDrive();
@@ -1116,35 +1121,173 @@ function importFollowups() {
   showToast(`✅ ${lines.length} tasks imported!`);
 }
 
-// ── Google Drive Sync ──
+// ── Google Drive Two-Way Sync ──
+
+// Store tasks as structured JSON in a separate Drive file for app sync
+// The human-readable Master Tasks doc is kept for Claude/manual reading
+// App sync uses a companion JSON file for reliable two-way merge
+
+async function getDriveToken() {
+  // Reuse Google OAuth token if available, else use API key for read
+  if (_googleToken) return { type: 'oauth', token: _googleToken };
+  if (config.oauthClientId) {
+    const token = await getGoogleToken();
+    if (token) return { type: 'oauth', token };
+  }
+  if (config.apiKey) return { type: 'apikey', token: config.apiKey };
+  return null;
+}
+
+async function syncFromDrive() {
+  if (!isOnline || !config.driveId) return;
+  const auth = await getDriveToken();
+  if (!auth) return;
+
+  try {
+    showToast('🔄 Syncing from Drive...');
+
+    // Read the companion JSON sync file from Drive
+    // Search for taskmaster-sync.json in Drive
+    const searchUrl = `https://www.googleapis.com/drive/v3/files?q=name%3D'taskmaster-sync.json'&fields=files(id,name,modifiedTime)`;
+    const headers = auth.type === 'oauth'
+      ? { 'Authorization': `Bearer ${auth.token}` }
+      : {};
+    const searchRes = await fetch(auth.type === 'apikey'
+      ? searchUrl + `&key=${auth.token}`
+      : searchUrl, { headers });
+
+    const searchData = await searchRes.json();
+    const syncFile = searchData.files?.[0];
+
+    if (!syncFile) {
+      // No sync file yet — push local tasks to Drive to create it
+      await pushSyncFile(auth);
+      await syncMasterDoc(auth);
+      showToast('☁️ Drive sync initialised');
+      return;
+    }
+
+    // Download the sync file
+    const dlRes = await fetch(
+      `https://www.googleapis.com/drive/v3/files/${syncFile.id}?alt=media`,
+      { headers: auth.type === 'oauth' ? { 'Authorization': `Bearer ${auth.token}` } : {} }
+    );
+    const driveTasks = await dlRes.json();
+
+    // Merge: most recent change wins per task (matched by title+category)
+    const merged = mergeTasks(tasks, driveTasks);
+    tasks = merged;
+    localStorage.setItem('tm_tasks', JSON.stringify(tasks));
+    renderAll();
+
+    // Push merged result back to Drive
+    await pushSyncFile(auth, syncFile.id);
+    await syncMasterDoc(auth);
+    showToast('✅ Synced with Google Drive');
+  } catch(e) {
+    console.error('Sync from Drive failed:', e);
+    showToast('⚠️ Drive sync failed — working offline');
+  }
+}
+
+function mergeTasks(localTasks, driveTasks) {
+  const merged = [...localTasks];
+
+  driveTasks.forEach(driveTask => {
+    const localIdx = merged.findIndex(t => t.id === driveTask.id);
+    if (localIdx === -1) {
+      // Task exists in Drive but not locally — add it
+      merged.push(driveTask);
+    } else {
+      // Task exists in both — most recent change wins
+      const localTime = new Date(merged[localIdx].updatedAt || merged[localIdx].created).getTime();
+      const driveTime = new Date(driveTask.updatedAt || driveTask.created).getTime();
+      if (driveTime > localTime) {
+        merged[localIdx] = driveTask;
+      }
+    }
+  });
+
+  // Sort: undone first by priority, then done by completion date
+  const priorityOrder = { high: 0, med: 1, low: 2 };
+  return merged.sort((a, b) => {
+    if (a.done !== b.done) return a.done ? 1 : -1;
+    if (!a.done) return (priorityOrder[a.priority] || 0) - (priorityOrder[b.priority] || 0);
+    return new Date(b.completedAt) - new Date(a.completedAt);
+  });
+}
+
+async function pushSyncFile(auth, existingFileId = null) {
+  const content = JSON.stringify(tasks);
+  const metadata = { name: 'taskmaster-sync.json', mimeType: 'application/json' };
+
+  if (existingFileId && auth.type === 'oauth') {
+    // Update existing file
+    await fetch(`https://www.googleapis.com/upload/drive/v3/files/${existingFileId}?uploadType=media`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${auth.token}`, 'Content-Type': 'application/json' },
+      body: content
+    });
+  } else if (auth.type === 'oauth') {
+    // Create new sync file
+    const form = new FormData();
+    form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+    form.append('file', new Blob([content], { type: 'application/json' }));
+    await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${auth.token}` },
+      body: form
+    });
+  }
+}
+
 async function syncToDrive() {
-  if (!isOnline || !config.apiKey || !config.driveId) {
+  if (!isOnline || !config.driveId) {
     if (!isOnline) return;
     showToast('⚙️ Add API key in Settings to sync');
     return;
   }
-
-  const high = tasks.filter(t => !t.done && t.priority === 'high');
-  const med = tasks.filter(t => !t.done && t.priority === 'med');
-  const low = tasks.filter(t => !t.done && t.priority === 'low');
-  const done = tasks.filter(t => t.done);
-
-  const fmt = t => `- [ ] ${t.title} [${catLabel(t.category)}] — ${fmtDate(t.created)}${t.remind ? ' ⏰ ' + formatTime(t.remind) : ''}`;
-  const fmtDone = t => `- [x] ${t.title} [${catLabel(t.category)}] — Completed: ${fmtDate(t.completedAt)}`;
-
-  const content = `# Master Tasks\n\nLast Updated: ${new Date().toLocaleString('en-GB')}\n\n---\n\n## 🔴 High Priority\n${high.length ? high.map(fmt).join('\n') : '(none)'}\n\n## 🟡 Medium Priority\n${med.length ? med.map(fmt).join('\n') : '(none)'}\n\n## 🟢 Low Priority\n${low.length ? low.map(fmt).join('\n') : '(none)'}\n\n---\n\n## ✅ Completed\n${done.length ? done.map(fmtDone).join('\n') : '(none)'}`;
+  const auth = await getDriveToken();
+  if (!auth) { showToast('⚙️ Configure Google API in Settings'); return; }
 
   try {
-    // Update Google Doc via Drive API
-    await fetch(`https://www.googleapis.com/upload/drive/v3/files/${config.driveId}?uploadType=media`, {
-      method: 'PATCH',
-      headers: { 'Authorization': `Bearer ${config.apiKey}`, 'Content-Type': 'text/plain' },
-      body: content
-    });
+    // Update timestamp on all tasks
+    tasks = tasks.map(t => ({ ...t, updatedAt: t.updatedAt || t.created }));
+
+    // Push JSON sync file
+    const searchRes = await fetch(
+      `https://www.googleapis.com/drive/v3/files?q=name%3D'taskmaster-sync.json'&fields=files(id)` +
+      (auth.type === 'apikey' ? `&key=${auth.token}` : ''),
+      { headers: auth.type === 'oauth' ? { 'Authorization': `Bearer ${auth.token}` } : {} }
+    );
+    const searchData = await searchRes.json();
+    const existingId = searchData.files?.[0]?.id;
+    await pushSyncFile(auth, existingId);
+
+    // Update human-readable Master Tasks doc
+    await syncMasterDoc(auth);
     showToast('☁️ Synced to Google Drive');
   } catch(e) {
     showToast('⚠️ Sync failed — saved locally');
   }
+}
+
+async function syncMasterDoc(auth) {
+  if (!config.driveId || auth.type !== 'oauth') return;
+  const high = tasks.filter(t => !t.done && t.priority === 'high');
+  const med = tasks.filter(t => !t.done && t.priority === 'med');
+  const low = tasks.filter(t => !t.done && t.priority === 'low');
+  const done = tasks.filter(t => t.done);
+  const fmt = t => `- [ ] ${t.title} [${catLabel(t.category)}] — ${fmtDate(t.created)}${t.remind ? ' ⏰ ' + formatTime(t.remind) : ''}`;
+  const fmtDone = t => `- [x] ${t.title} [${catLabel(t.category)}] — Completed: ${fmtDate(t.completedAt)}`;
+  const content = `# Master Tasks\n\nLast Updated: ${new Date().toLocaleString('en-GB')}\n\n---\n\n## 🔴 High Priority\n${high.length ? high.map(fmt).join('\n') : '(none)'}\n\n## 🟡 Medium Priority\n${med.length ? med.map(fmt).join('\n') : '(none)'}\n\n## 🟢 Low Priority\n${low.length ? low.map(fmt).join('\n') : '(none)'}\n\n---\n\n## ✅ Completed\n${done.length ? done.map(fmtDone).join('\n') : '(none)'}`;
+  try {
+    await fetch(`https://www.googleapis.com/upload/drive/v3/files/${config.driveId}?uploadType=media`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${auth.token}`, 'Content-Type': 'text/plain' },
+      body: content
+    });
+  } catch(e) { console.error('Master doc sync failed:', e); }
 }
 
 // ── Google Calendar ──

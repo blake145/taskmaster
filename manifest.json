@@ -1,0 +1,19 @@
+{
+  "name": "TaskMaster AI",
+  "short_name": "TaskMaster",
+  "description": "AI-powered task manager with offline support and Google Drive sync",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0d0f1e",
+  "theme_color": "#3d5af1",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%233d5af1'/><text y='130' x='30' font-size='120' font-family='sans-serif'>✅</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["productivity", "utilities"],
+  "screenshots": []
+}

@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#1a1a2e" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f0f4ff" media="(prefers-color-scheme: light)">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="TaskMaster">
+  <title>TaskMaster AI</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    /* ── CSS Variables ── */
+    :root {
+      --bg: #f0f4ff;
+      --bg2: #e2e8f8;
+      --card: #ffffff;
+      --text: #0f1225;
+      --text2: #4a5180;
+      --accent: #3d5af1;
+      --accent2: #e84393;
+      --high: #ff3b3b;
+      --med: #ffaa00;
+      --low: #22c55e;
+      --done: #94a3b8;
+      --border: rgba(0,0,0,0.08);
+      --shadow: 0 4px 24px rgba(61,90,241,0.10);
+      --radius: 18px;
+      --font-head: 'Syne', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+      --nav-h: 64px;
+      --online: #22c55e;
+      --offline: #ff3b3b;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d0f1e;
+        --bg2: #151829;
+        --card: #1a1d35;
+        --text: #e8ecff;
+        --text2: #7b82b0;
+        --border: rgba(255,255,255,0.07);
+        --shadow: 0 4px 24px rgba(0,0,0,0.4);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: var(--font-head);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      overscroll-behavior: none;
+    }
+
+    /* ── Header ── */
+    .header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      backdrop-filter: blur(12px);
+    }
+    .header-title { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+    .header-title span { color: var(--accent); }
+    .status-row { display: flex; align-items: center; gap: 8px; }
+    .status-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--online); transition: background 0.3s;
+    }
+    .status-dot.offline { background: var(--offline); }
+    .status-label { font-size: 11px; color: var(--text2); font-family: var(--font-mono); }
+    .sync-btn {
+      background: none; border: 1px solid var(--border); border-radius: 8px;
+      padding: 4px 10px; font-size: 11px; color: var(--text2);
+      font-family: var(--font-mono); cursor: pointer; transition: all 0.2s;
+    }
+    .sync-btn:active { background: var(--accent); color: white; border-color: var(--accent); }
+
+    /* ── Main Content ── */
+    .main {
+      padding-top: 70px;
+      padding-bottom: calc(var(--nav-h) + 20px);
+      min-height: 100vh;
+    }
+
+    /* ── Tab Bar ── */
+    .tab-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display: flex; height: var(--nav-h);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .tab-btn {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 3px;
+      background: none; border: none; cursor: pointer;
+      color: var(--text2); font-size: 10px; font-family: var(--font-head);
+      font-weight: 600; letter-spacing: 0.3px; transition: color 0.2s;
+    }
+    .tab-btn.active { color: var(--accent); }
+    .tab-icon { font-size: 20px; line-height: 1; }
+
+    /* ── Page ── */
+    .page { display: none; padding: 16px; }
+    .page.active { display: block; }
+
+    /* ── FAB ── */
+    .fab {
+      position: fixed; bottom: calc(var(--nav-h) + 16px); right: 20px; z-index: 99;
+      width: 56px; height: 56px; border-radius: 16px;
+      background: var(--accent); border: none; cursor: pointer;
+      font-size: 26px; color: white; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 24px rgba(61,90,241,0.4);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .fab:active { transform: scale(0.93); box-shadow: 0 4px 12px rgba(61,90,241,0.3); }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--card); border-radius: var(--radius);
+      border: 1px solid var(--border); padding: 16px;
+      margin-bottom: 12px; box-shadow: var(--shadow);
+      transition: transform 0.15s;
+    }
+    .card:active { transform: scale(0.98); }
+
+    /* ── Task Item ── */
+    .task-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 16px; background: var(--card);
+      border-radius: 14px; border: 1px solid var(--border);
+      margin-bottom: 10px; position: relative; overflow: hidden;
+    }
+    .task-item::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 4px; border-radius: 4px 0 0 4px;
+    }
+    .task-item.high::before { background: var(--high); }
+    .task-item.med::before { background: var(--med); }
+    .task-item.low::before { background: var(--low); }
+    .task-item.done { opacity: 0.5; }
+    .task-item.done .task-title { text-decoration: line-through; }
+
+    .task-check {
+      width: 22px; height: 22px; border-radius: 7px;
+      border: 2px solid var(--border); background: var(--bg2);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0; margin-top: 1px;
+      transition: all 0.2s; font-size: 13px;
+    }
+    .task-check.checked { background: var(--accent); border-color: var(--accent); color: white; }
+
+    .task-body { flex: 1; min-width: 0; }
+    .task-title { font-size: 15px; font-weight: 600; line-height: 1.3; word-break: break-word; }
+    .task-meta { display: flex; align-items: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+    .tag {
+      font-size: 10px; font-family: var(--font-mono); padding: 2px 7px;
+      border-radius: 5px; font-weight: 700; letter-spacing: 0.3px;
+    }
+    .tag-work { background: rgba(61,90,241,0.12); color: var(--accent); }
+    .tag-email { background: rgba(232,67,147,0.12); color: var(--accent2); }
+    .tag-code { background: rgba(34,197,94,0.12); color: var(--low); }
+    .task-date { font-size: 10px; color: var(--text2); font-family: var(--font-mono); }
+
+    .task-actions { display: flex; flex-direction: column; gap: 6px; }
+    .task-del {
+      width: 28px; height: 28px; border-radius: 8px; border: 1px solid var(--border);
+      background: none; cursor: pointer; font-size: 14px;
+      display: flex; align-items: center; justify-content: center; color: var(--text2);
+    }
+    .task-remind {
+      width: 28px; height: 28px; border-radius: 8px; border: 1px solid var(--border);
+      background: none; cursor: pointer; font-size: 14px;
+      display: flex; align-items: center; justify-content: center; color: var(--text2);
+    }
+
+    /* ── Section Header ── */
+    .section-head {
+      display: flex; align-items: center; gap: 8px;
+      margin: 20px 0 10px; font-size: 12px; font-family: var(--font-mono);
+      font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 1px;
+    }
+    .section-count {
+      background: var(--bg2); border-radius: 6px;
+      padding: 1px 7px; font-size: 11px; color: var(--text2);
+    }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+      align-items: flex-end;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--card); border-radius: 24px 24px 0 0;
+      padding: 24px 20px 40px; width: 100%;
+      max-height: 90vh; overflow-y: auto;
+      animation: slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .modal-handle {
+      width: 40px; height: 4px; background: var(--border);
+      border-radius: 2px; margin: 0 auto 20px;
+    }
+    .modal-title { font-size: 20px; font-weight: 800; margin-bottom: 20px; }
+
+    /* ── Form Elements ── */
+    .form-group { margin-bottom: 16px; }
+    .form-label { font-size: 12px; font-family: var(--font-mono); color: var(--text2); margin-bottom: 6px; display: block; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-input, .form-textarea, .form-select {
+      width: 100%; background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px 14px; font-size: 15px;
+      color: var(--text); font-family: var(--font-head); outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      border-color: var(--accent);
+    }
+    .form-textarea { min-height: 80px; resize: none; }
+
+    .priority-row { display: flex; gap: 8px; }
+    .priority-btn {
+      flex: 1; padding: 10px; border-radius: 10px; border: 2px solid var(--border);
+      background: var(--bg2); cursor: pointer; font-size: 13px; font-weight: 700;
+      font-family: var(--font-head); transition: all 0.2s; text-align: center;
+    }
+    .priority-btn.sel-high { background: rgba(255,59,59,0.15); border-color: var(--high); color: var(--high); }
+    .priority-btn.sel-med { background: rgba(255,170,0,0.15); border-color: var(--med); color: var(--med); }
+    .priority-btn.sel-low { background: rgba(34,197,94,0.15); border-color: var(--low); color: var(--low); }
+
+    .cat-row { display: flex; gap: 8px; }
+    .cat-btn {
+      flex: 1; padding: 9px 4px; border-radius: 10px; border: 2px solid var(--border);
+      background: var(--bg2); cursor: pointer; font-size: 11px; font-weight: 700;
+      font-family: var(--font-mono); transition: all 0.2s; text-align: center;
+    }
+    .cat-btn.sel-work { background: rgba(61,90,241,0.15); border-color: var(--accent); color: var(--accent); }
+    .cat-btn.sel-email { background: rgba(232,67,147,0.15); border-color: var(--accent2); color: var(--accent2); }
+    .cat-btn.sel-code { background: rgba(34,197,94,0.15); border-color: var(--low); color: var(--low); }
+
+    .btn-primary {
+      width: 100%; padding: 16px; border-radius: 14px;
+      background: var(--accent); border: none; color: white;
+      font-size: 16px; font-weight: 700; font-family: var(--font-head);
+      cursor: pointer; transition: opacity 0.2s, transform 0.15s;
+      margin-top: 8px;
+    }
+    .btn-primary:active { opacity: 0.85; transform: scale(0.98); }
+    .btn-secondary {
+      width: 100%; padding: 14px; border-radius: 14px;
+      background: var(--bg2); border: 1px solid var(--border); color: var(--text);
+      font-size: 15px; font-weight: 600; font-family: var(--font-head);
+      cursor: pointer; margin-top: 8px;
+    }
+
+    /* ── AI Panel ── */
+    .ai-bubble {
+      background: linear-gradient(135deg, rgba(61,90,241,0.15), rgba(232,67,147,0.1));
+      border: 1px solid rgba(61,90,241,0.2);
+      border-radius: var(--radius); padding: 14px 16px; margin-bottom: 12px;
+    }
+    .ai-label { font-size: 10px; font-family: var(--font-mono); font-weight: 700; color: var(--accent); margin-bottom: 6px; letter-spacing: 1px; }
+    .ai-text { font-size: 14px; line-height: 1.5; color: var(--text); }
+    .ai-loading { display: flex; gap: 4px; align-items: center; }
+    .ai-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 1.2s infinite; }
+    .ai-dot:nth-child(2) { animation-delay: 0.2s; }
+    .ai-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes pulse { 0%,80%,100% { opacity: 0.3; transform: scale(0.8); } 40% { opacity: 1; transform: scale(1); } }
+
+    /* ── Stats ── */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .stat-card {
+      background: var(--card); border-radius: 14px; border: 1px solid var(--border);
+      padding: 14px; text-align: center;
+    }
+    .stat-num { font-size: 28px; font-weight: 800; color: var(--accent); line-height: 1; }
+    .stat-label { font-size: 11px; color: var(--text2); font-family: var(--font-mono); margin-top: 4px; }
+
+    /* ── Email Page ── */
+    .email-actions { display: flex; flex-direction: column; gap: 10px; }
+    .email-action-btn {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 16px; cursor: pointer;
+      transition: all 0.2s; text-align: left; width: 100%;
+    }
+    .email-action-btn:active { background: var(--bg2); }
+    .email-action-icon { font-size: 24px; width: 44px; height: 44px; border-radius: 12px; background: var(--bg2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .email-action-title { font-size: 15px; font-weight: 700; }
+    .email-action-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+    /* ── Calendar Page ── */
+    .cal-item {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 14px 16px; background: var(--card);
+      border-radius: 14px; border: 1px solid var(--border); margin-bottom: 10px;
+    }
+    .cal-time { font-family: var(--font-mono); font-size: 12px; color: var(--accent); font-weight: 700; min-width: 50px; }
+    .cal-title { font-size: 14px; font-weight: 600; }
+    .cal-source { font-size: 11px; color: var(--text2); margin-top: 3px; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: calc(var(--nav-h) + 80px); left: 50%; transform: translateX(-50%) translateY(20px);
+      background: var(--text); color: var(--bg); padding: 10px 20px;
+      border-radius: 100px; font-size: 13px; font-weight: 600;
+      opacity: 0; transition: all 0.3s; z-index: 300; white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── Reminder Modal ── */
+    .remind-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .remind-opt {
+      padding: 12px; border-radius: 12px; border: 1px solid var(--border);
+      background: var(--bg2); cursor: pointer; text-align: center;
+      font-size: 13px; font-weight: 600; transition: all 0.2s;
+    }
+    .remind-opt:active { background: var(--accent); color: white; border-color: var(--accent); }
+
+    /* ── Empty State ── */
+    .empty { text-align: center; padding: 40px 20px; color: var(--text2); }
+    .empty-icon { font-size: 48px; margin-bottom: 12px; }
+    .empty-text { font-size: 15px; font-weight: 600; }
+    .empty-sub { font-size: 13px; margin-top: 6px; }
+
+    /* ── Offline Banner ── */
+    .offline-banner {
+      display: none; background: rgba(255,59,59,0.1); border: 1px solid rgba(255,59,59,0.3);
+      border-radius: 10px; padding: 10px 14px; margin-bottom: 12px;
+      font-size: 13px; color: var(--high); font-weight: 600; text-align: center;
+    }
+    .offline-banner.show { display: block; }
+
+    /* ── Config Panel ── */
+    .config-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+    }
+    .config-label { font-size: 14px; font-weight: 600; }
+    .config-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+    .config-input {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
+      padding: 6px 10px; font-size: 12px; color: var(--text); font-family: var(--font-mono);
+      width: 160px; outline: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-title">Task<span>Master</span> AI</div>
+  <div class="status-row">
+    <div class="status-dot" id="statusDot"></div>
+    <span class="status-label" id="statusLabel">Online</span>
+    <button class="sync-btn" onclick="syncToDrive()">⟳ Sync</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Main -->
+<div class="main">
+
+  <!-- TASKS PAGE -->
+  <div class="page active" id="page-tasks">
+    <div class="offline-banner" id="offlineBanner">📵 Offline — changes saved locally, will sync when online</div>
+
+    <div id="ai-suggest-area"></div>
+
+    <div class="section-head">🔴 High Priority <span class="section-count" id="cnt-high">0</span></div>
+    <div id="list-high"></div>
+
+    <div class="section-head">🟡 Medium Priority <span class="section-count" id="cnt-med">0</span></div>
+    <div id="list-med"></div>
+
+    <div class="section-head">🟢 Low Priority <span class="section-count" id="cnt-low">0</span></div>
+    <div id="list-low"></div>
+
+    <div class="section-head">✅ Completed <span class="section-count" id="cnt-done">0</span></div>
+    <div id="list-done"></div>
+  </div>
+
+  <!-- EMAIL PAGE -->
+  <div class="page" id="page-email">
+    <div class="section-head" style="margin-top:4px">📧 Email Assistant</div>
+    <div id="offline-email-banner" class="offline-banner">📵 AI email features require internet</div>
+
+    <div class="email-actions">
+      <button class="email-action-btn" onclick="openEmailDraft('reply')">
+        <div class="email-action-icon">↩️</div>
+        <div><div class="email-action-title">Draft a Reply</div><div class="email-action-sub">Paste an email, AI writes your response</div></div>
+      </button>
+      <button class="email-action-btn" onclick="openEmailDraft('compose')">
+        <div class="email-action-icon">✉️</div>
+        <div><div class="email-action-title">Compose Email</div><div class="email-action-sub">Tell me what to write, AI drafts it</div></div>
+      </button>
+      <button class="email-action-btn" onclick="openEmailDraft('followup')">
+        <div class="email-action-icon">🔔</div>
+        <div><div class="email-action-title">Follow-up Actions</div><div class="email-action-sub">Extract tasks from an email thread</div></div>
+      </button>
+    </div>
+
+    <div id="email-result-area" style="margin-top:16px"></div>
+  </div>
+
+  <!-- CALENDAR PAGE -->
+  <div class="page" id="page-calendar">
+    <div class="section-head" style="margin-top:4px">📅 Today's Schedule</div>
+    <div id="cal-list">
+      <div class="empty">
+        <div class="empty-icon">📅</div>
+        <div class="empty-text">Connect Google Calendar</div>
+        <div class="empty-sub">Add your Google Calendar API key in Settings to see events here</div>
+      </div>
+    </div>
+    <div class="section-head">⏰ Task Reminders</div>
+    <div id="reminder-list">
+      <div class="empty" style="padding:20px">
+        <div class="empty-sub">Tasks with reminders will appear here</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS PAGE -->
+  <div class="page" id="page-settings">
+    <div class="section-head" style="margin-top:4px">⚙️ Configuration</div>
+    <div class="card">
+      <div class="config-row">
+        <div>
+          <div class="config-label">Google Drive File ID</div>
+          <div class="config-sub">Master Tasks file to sync with</div>
+        </div>
+        <input class="config-input" id="cfg-drive-id" placeholder="File ID..." value="1IHaSqu4zP91HP-hSWeSW9z6Dsu7bzIss3LO5u5aFy40">
+      </div>
+      <div class="config-row">
+        <div>
+          <div class="config-label">Google API Key</div>
+          <div class="config-sub">For Calendar & Drive sync</div>
+        </div>
+        <input class="config-input" id="cfg-api-key" type="password" placeholder="AIza...">
+      </div>
+      <div class="config-row">
+        <div>
+          <div class="config-label">Google Calendar ID</div>
+          <div class="config-sub">e.g. primary or email</div>
+        </div>
+        <input class="config-input" id="cfg-cal-id" placeholder="primary">
+      </div>
+      <div class="config-row">
+        <div>
+          <div class="config-label">Anthropic API Key</div>
+          <div class="config-sub">For AI features when online</div>
+        </div>
+        <input class="config-input" id="cfg-anthropic-key" type="password" placeholder="sk-ant-...">
+      </div>
+    </div>
+    <button class="btn-primary" onclick="saveConfig()">💾 Save Settings</button>
+
+    <div class="section-head" style="margin-top:20px">📊 Stats</div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-num" id="stat-total">0</div><div class="stat-label">Total Tasks</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-done">0</div><div class="stat-label">Completed</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-high">0</div><div class="stat-label">High Priority</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-pending">0</div><div class="stat-label">Pending</div></div>
+    </div>
+
+    <button class="btn-secondary" onclick="exportTasks()">📤 Export Tasks</button>
+    <button class="btn-secondary" style="margin-top:8px;color:var(--high)" onclick="clearCompleted()">🗑 Clear Completed</button>
+  </div>
+
+</div>
+
+<!-- FAB -->
+<button class="fab" id="fab" onclick="openAddTask()">+</button>
+
+<!-- Tab Bar -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('tasks',this)"><span class="tab-icon">✅</span>Tasks</button>
+  <button class="tab-btn" onclick="switchTab('email',this)"><span class="tab-icon">📧</span>Email</button>
+  <button class="tab-btn" onclick="switchTab('calendar',this)"><span class="tab-icon">📅</span>Calendar</button>
+  <button class="tab-btn" onclick="switchTab('settings',this)"><span class="tab-icon">⚙️</span>Settings</button>
+</div>
+
+<!-- Add Task Modal -->
+<div class="modal-overlay" id="modal-add">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">New Task</div>
+
+    <div class="form-group">
+      <label class="form-label">Task Description</label>
+      <input class="form-input" id="task-title" placeholder="What needs to be done?" autocomplete="off">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Priority</label>
+      <div class="priority-row">
+        <button class="priority-btn sel-high" onclick="setPriority('high',this)">🔴 High</button>
+        <button class="priority-btn" onclick="setPriority('med',this)">🟡 Medium</button>
+        <button class="priority-btn" onclick="setPriority('low',this)">🟢 Low</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <div class="cat-row">
+        <button class="cat-btn sel-work" onclick="setCategory('work',this)">💼 Work</button>
+        <button class="cat-btn" onclick="setCategory('email',this)">📧 Email</button>
+        <button class="cat-btn" onclick="setCategory('code',this)">💻 Code</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Reminder (optional)</label>
+      <input class="form-input" id="task-remind" type="datetime-local">
+    </div>
+
+    <div id="ai-priority-hint" style="display:none" class="ai-bubble">
+      <div class="ai-label">✨ AI SUGGESTION</div>
+      <div class="ai-text" id="ai-hint-text"></div>
+    </div>
+
+    <button class="btn-primary" onclick="saveTask()">Add Task</button>
+    <button class="btn-secondary" onclick="closeModal('modal-add')">Cancel</button>
+  </div>
+</div>
+
+<!-- Email Draft Modal -->
+<div class="modal-overlay" id="modal-email">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="email-modal-title">Draft Reply</div>
+    <div class="form-group">
+      <label class="form-label" id="email-input-label">Paste the email you received</label>
+      <textarea class="form-textarea" id="email-input" placeholder="Paste email content here..." style="min-height:120px"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Your key points / tone (optional)</label>
+      <input class="form-input" id="email-points" placeholder="e.g. polite decline, confirm meeting at 3pm...">
+    </div>
+    <button class="btn-primary" onclick="runEmailAI()">✨ Generate with AI</button>
+    <button class="btn-secondary" onclick="closeModal('modal-email')">Cancel</button>
+  </div>
+</div>
+
+<!-- Reminder Modal -->
+<div class="modal-overlay" id="modal-remind">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Set Reminder</div>
+    <div class="remind-options">
+      <div class="remind-opt" onclick="setReminder(15)">In 15 min</div>
+      <div class="remind-opt" onclick="setReminder(60)">In 1 hour</div>
+      <div class="remind-opt" onclick="setReminder(1440)">Tomorrow</div>
+      <div class="remind-opt" onclick="setReminder('custom')">Custom</div>
+    </div>
+    <input class="form-input" id="custom-remind-time" type="datetime-local" style="margin-top:12px;display:none">
+    <button class="btn-primary" style="margin-top:12px" onclick="confirmReminder()">Set Reminder</button>
+    <button class="btn-secondary" onclick="closeModal('modal-remind')">Cancel</button>
+  </div>
+</div>
+
+<script>
+// ── State ──
+let tasks = JSON.parse(localStorage.getItem('tm_tasks') || '[]');
+let config = JSON.parse(localStorage.getItem('tm_config') || '{}');
+let selectedPriority = 'high';
+let selectedCategory = 'work';
+let emailMode = 'reply';
+let remindTaskId = null;
+let isOnline = navigator.onLine;
+
+// ── Init ──
+window.addEventListener('load', () => {
+  loadConfig();
+  renderAll();
+  updateOnlineStatus();
+  checkReminders();
+  if (isOnline) getAISuggestion();
+});
+
+window.addEventListener('online', () => { isOnline = true; updateOnlineStatus(); syncToDrive(); getAISuggestion(); });
+window.addEventListener('offline', () => { isOnline = false; updateOnlineStatus(); });
+
+function updateOnlineStatus() {
+  const dot = document.getElementById('statusDot');
+  const label = document.getElementById('statusLabel');
+  const banner = document.getElementById('offlineBanner');
+  const emailBanner = document.getElementById('offline-email-banner');
+  dot.classList.toggle('offline', !isOnline);
+  label.textContent = isOnline ? 'Online' : 'Offline';
+  banner.classList.toggle('show', !isOnline);
+  if (emailBanner) emailBanner.classList.toggle('show', !isOnline);
+}
+
+// ── Config ──
+function loadConfig() {
+  document.getElementById('cfg-drive-id').value = config.driveId || '1IHaSqu4zP91HP-hSWeSW9z6Dsu7bzIss3LO5u5aFy40';
+  document.getElementById('cfg-api-key').value = config.apiKey || '';
+  document.getElementById('cfg-cal-id').value = config.calId || 'primary';
+  document.getElementById('cfg-anthropic-key').value = config.anthropicKey || '';
+}
+function saveConfig() {
+  config = {
+    driveId: document.getElementById('cfg-drive-id').value.trim(),
+    apiKey: document.getElementById('cfg-api-key').value.trim(),
+    calId: document.getElementById('cfg-cal-id').value.trim(),
+    anthropicKey: document.getElementById('cfg-anthropic-key').value.trim()
+  };
+  localStorage.setItem('tm_config', JSON.stringify(config));
+  showToast('✅ Settings saved');
+  if (config.apiKey) loadCalendar();
+}
+
+// ── Task CRUD ──
+function saveTasks() {
+  localStorage.setItem('tm_tasks', JSON.stringify(tasks));
+  renderAll();
+  if (isOnline) syncToDrive();
+}
+
+function addTask(title, priority, category, remind) {
+  const task = {
+    id: Date.now().toString(),
+    title, priority, category,
+    done: false,
+    remind: remind || null,
+    created: new Date().toISOString(),
+    completedAt: null
+  };
+  tasks.unshift(task);
+  saveTasks();
+  if (remind) scheduleReminder(task);
+  return task;
+}
+
+function toggleDone(id) {
+  const t = tasks.find(t => t.id === id);
+  if (!t) return;
+  t.done = !t.done;
+  t.completedAt = t.done ? new Date().toISOString() : null;
+  saveTasks();
+  showToast(t.done ? '✅ Task completed!' : '↩️ Task reopened');
+}
+
+function deleteTask(id) {
+  tasks = tasks.filter(t => t.id !== id);
+  saveTasks();
+  showToast('🗑 Task deleted');
+}
+
+function clearCompleted() {
+  tasks = tasks.filter(t => !t.done);
+  saveTasks();
+  showToast('🗑 Completed tasks cleared');
+}
+
+// ── Render ──
+function renderAll() {
+  const high = tasks.filter(t => !t.done && t.priority === 'high');
+  const med = tasks.filter(t => !t.done && t.priority === 'med');
+  const low = tasks.filter(t => !t.done && t.priority === 'low');
+  const done = tasks.filter(t => t.done);
+
+  document.getElementById('list-high').innerHTML = high.length ? high.map(renderTask).join('') : '<div class="empty" style="padding:16px"><div class="empty-sub">No high priority tasks</div></div>';
+  document.getElementById('list-med').innerHTML = med.length ? med.map(renderTask).join('') : '<div class="empty" style="padding:16px"><div class="empty-sub">No medium priority tasks</div></div>';
+  document.getElementById('list-low').innerHTML = low.length ? low.map(renderTask).join('') : '<div class="empty" style="padding:16px"><div class="empty-sub">No low priority tasks</div></div>';
+  document.getElementById('list-done').innerHTML = done.length ? done.map(renderTask).join('') : '<div class="empty" style="padding:16px"><div class="empty-sub">No completed tasks yet</div></div>';
+
+  document.getElementById('cnt-high').textContent = high.length;
+  document.getElementById('cnt-med').textContent = med.length;
+  document.getElementById('cnt-low').textContent = low.length;
+  document.getElementById('cnt-done').textContent = done.length;
+
+  // Stats
+  document.getElementById('stat-total').textContent = tasks.length;
+  document.getElementById('stat-done').textContent = done.length;
+  document.getElementById('stat-high').textContent = high.length;
+  document.getElementById('stat-pending').textContent = tasks.filter(t => !t.done).length;
+
+  // Reminders list
+  const withRemind = tasks.filter(t => t.remind && !t.done);
+  const remindList = document.getElementById('reminder-list');
+  if (withRemind.length) {
+    remindList.innerHTML = withRemind.map(t => `
+      <div class="cal-item">
+        <div class="cal-time">${formatTime(t.remind)}</div>
+        <div><div class="cal-title">${t.title}</div><div class="cal-source">${catLabel(t.category)}</div></div>
+      </div>`).join('');
+  }
+}
+
+function renderTask(t) {
+  const catClass = { work: 'tag-work', email: 'tag-email', code: 'tag-code' }[t.category] || 'tag-work';
+  const catText = catLabel(t.category);
+  const date = t.done && t.completedAt
+    ? '✅ ' + fmtDate(t.completedAt)
+    : '📅 ' + fmtDate(t.created);
+  return `
+    <div class="task-item ${t.priority} ${t.done ? 'done' : ''}">
+      <div class="task-check ${t.done ? 'checked' : ''}" onclick="toggleDone('${t.id}')">${t.done ? '✓' : ''}</div>
+      <div class="task-body">
+        <div class="task-title">${t.title}</div>
+        <div class="task-meta">
+          <span class="tag ${catClass}">${catText}</span>
+          <span class="task-date">${date}</span>
+          ${t.remind ? `<span class="task-date">⏰ ${formatTime(t.remind)}</span>` : ''}
+        </div>
+      </div>
+      <div class="task-actions">
+        <button class="task-remind" onclick="openReminder('${t.id}')" title="Set reminder">⏰</button>
+        <button class="task-del" onclick="deleteTask('${t.id}')" title="Delete">✕</button>
+      </div>
+    </div>`;
+}
+
+function catLabel(cat) {
+  return { work: '💼 Work', email: '📧 Email', code: '💻 Code' }[cat] || '💼 Work';
+}
+
+function fmtDate(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+}
+
+function formatTime(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+}
+
+// ── Modal / Form ──
+function openAddTask() {
+  document.getElementById('task-title').value = '';
+  document.getElementById('task-remind').value = '';
+  document.getElementById('ai-priority-hint').style.display = 'none';
+  selectedPriority = 'high'; selectedCategory = 'work';
+  document.querySelectorAll('.priority-btn').forEach(b => b.className = 'priority-btn');
+  document.querySelectorAll('.priority-btn')[0].className = 'priority-btn sel-high';
+  document.querySelectorAll('.cat-btn').forEach(b => b.className = 'cat-btn');
+  document.querySelectorAll('.cat-btn')[0].className = 'cat-btn sel-work';
+  document.getElementById('modal-add').classList.add('open');
+  setTimeout(() => document.getElementById('task-title').focus(), 300);
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+
+function setPriority(p, btn) {
+  selectedPriority = p;
+  document.querySelectorAll('.priority-btn').forEach(b => b.className = 'priority-btn');
+  btn.className = `priority-btn sel-${p}`;
+  // AI hint when online
+  const title = document.getElementById('task-title').value;
+  if (isOnline && title && config.anthropicKey) getAIPriorityHint(title, p);
+}
+
+function setCategory(c, btn) {
+  selectedCategory = c;
+  document.querySelectorAll('.cat-btn').forEach(b => b.className = 'cat-btn');
+  btn.className = `cat-btn sel-${c}`;
+}
+
+function saveTask() {
+  const title = document.getElementById('task-title').value.trim();
+  if (!title) { showToast('⚠️ Please enter a task'); return; }
+  const remind = document.getElementById('task-remind').value;
+  addTask(title, selectedPriority, selectedCategory, remind || null);
+  closeModal('modal-add');
+  showToast('✅ Task added!');
+}
+
+// ── AI Features ──
+async function getAISuggestion() {
+  if (!isOnline || !config.anthropicKey || tasks.filter(t=>!t.done).length === 0) return;
+  const area = document.getElementById('ai-suggest-area');
+  area.innerHTML = `<div class="ai-bubble"><div class="ai-label">✨ AI DAILY FOCUS</div><div class="ai-loading"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div></div></div>`;
+
+  const pending = tasks.filter(t => !t.done).slice(0, 10).map(t => `- [${t.priority}] ${t.title} (${t.category})`).join('\n');
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': config.anthropicKey, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514', max_tokens: 120,
+        messages: [{ role: 'user', content: `Given these tasks, give me ONE sharp sentence on what to focus on today and why. Be direct, no fluff.\n\nTasks:\n${pending}` }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.[0]?.text || '';
+    area.innerHTML = `<div class="ai-bubble"><div class="ai-label">✨ AI DAILY FOCUS</div><div class="ai-text">${text}</div></div>`;
+  } catch(e) { area.innerHTML = ''; }
+}
+
+async function getAIPriorityHint(title, priority) {
+  if (!config.anthropicKey) return;
+  const hint = document.getElementById('ai-priority-hint');
+  const hintText = document.getElementById('ai-hint-text');
+  hint.style.display = 'block';
+  hintText.innerHTML = '<div class="ai-loading"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div></div>';
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': config.anthropicKey, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514', max_tokens: 60,
+        messages: [{ role: 'user', content: `Task: "${title}". Marked as ${priority} priority. One sentence: is this the right priority and why? Be very brief.` }]
+      })
+    });
+    const data = await res.json();
+    hintText.textContent = data.content?.[0]?.text || '';
+  } catch(e) { hint.style.display = 'none'; }
+}
+
+// ── Email AI ──
+function openEmailDraft(mode) {
+  if (!isOnline) { showToast('📵 AI requires internet connection'); return; }
+  emailMode = mode;
+  const titles = { reply: 'Draft Reply', compose: 'Compose Email', followup: 'Extract Follow-ups' };
+  const labels = { reply: 'Paste the email you received', compose: 'Describe what you want to say', followup: 'Paste the email thread' };
+  document.getElementById('email-modal-title').textContent = titles[mode];
+  document.getElementById('email-input-label').textContent = labels[mode];
+  document.getElementById('email-input').value = '';
+  document.getElementById('email-points').value = '';
+  document.getElementById('modal-email').classList.add('open');
+}
+
+async function runEmailAI() {
+  if (!config.anthropicKey) { showToast('⚠️ Add Anthropic API key in Settings'); return; }
+  const input = document.getElementById('email-input').value.trim();
+  const points = document.getElementById('email-points').value.trim();
+  if (!input) { showToast('⚠️ Please paste email content'); return; }
+
+  closeModal('modal-email');
+  const area = document.getElementById('email-result-area');
+  area.innerHTML = `<div class="ai-bubble"><div class="ai-label">✨ AI GENERATING...</div><div class="ai-loading"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div></div></div>`;
+
+  const prompts = {
+    reply: `Draft a professional email reply to this email. ${points ? 'Key points: ' + points : 'Match the tone.'}\n\nOriginal email:\n${input}`,
+    compose: `Write a professional email based on this description: ${input}. ${points ? 'Additional notes: ' + points : ''}`,
+    followup: `Extract all follow-up action items and commitments from this email thread. List each as a task with suggested priority (high/medium/low).\n\nEmail:\n${input}`
+  };
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': config.anthropicKey, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514', max_tokens: 500,
+        messages: [{ role: 'user', content: prompts[emailMode] }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.[0]?.text || 'No response generated.';
+
+    area.innerHTML = `
+      <div class="ai-bubble">
+        <div class="ai-label">✨ AI RESULT</div>
+        <div class="ai-text" style="white-space:pre-wrap">${text}</div>
+      </div>
+      <button class="btn-secondary" onclick="copyResult()" style="margin-top:8px">📋 Copy to Clipboard</button>
+      ${emailMode === 'followup' ? '<button class="btn-primary" onclick="importFollowups()" style="margin-top:8px">➕ Add as Tasks</button>' : ''}
+    `;
+    window._lastAIResult = text;
+
+    // Auto-extract tasks from followup
+    if (emailMode === 'followup') window._followupText = text;
+  } catch(e) {
+    area.innerHTML = `<div class="ai-bubble"><div class="ai-label">❌ ERROR</div><div class="ai-text">Could not connect to AI. Check your API key in Settings.</div></div>`;
+  }
+}
+
+function copyResult() {
+  navigator.clipboard.writeText(window._lastAIResult || '').then(() => showToast('📋 Copied!'));
+}
+
+function importFollowups() {
+  // Simple extraction: find lines that look like tasks
+  const lines = (window._followupText || '').split('\n').filter(l => l.trim().match(/^[-•*\d]/));
+  if (!lines.length) { showToast('No tasks found to import'); return; }
+  lines.forEach(line => {
+    const clean = line.replace(/^[-•*\d.\s]+/, '').trim();
+    const isHigh = /urgent|asap|immediately|high/i.test(clean);
+    const isMed = /soon|follow.?up|medium/i.test(clean);
+    if (clean) addTask(clean, isHigh ? 'high' : isMed ? 'med' : 'low', 'email', null);
+  });
+  showToast(`✅ ${lines.length} tasks imported!`);
+}
+
+// ── Google Drive Sync ──
+async function syncToDrive() {
+  if (!isOnline || !config.apiKey || !config.driveId) {
+    if (!isOnline) return;
+    showToast('⚙️ Add API key in Settings to sync');
+    return;
+  }
+
+  const high = tasks.filter(t => !t.done && t.priority === 'high');
+  const med = tasks.filter(t => !t.done && t.priority === 'med');
+  const low = tasks.filter(t => !t.done && t.priority === 'low');
+  const done = tasks.filter(t => t.done);
+
+  const fmt = t => `- [ ] ${t.title} [${catLabel(t.category)}] — ${fmtDate(t.created)}${t.remind ? ' ⏰ ' + formatTime(t.remind) : ''}`;
+  const fmtDone = t => `- [x] ${t.title} [${catLabel(t.category)}] — Completed: ${fmtDate(t.completedAt)}`;
+
+  const content = `# Master Tasks\n\nLast Updated: ${new Date().toLocaleString('en-GB')}\n\n---\n\n## 🔴 High Priority\n${high.length ? high.map(fmt).join('\n') : '(none)'}\n\n## 🟡 Medium Priority\n${med.length ? med.map(fmt).join('\n') : '(none)'}\n\n## 🟢 Low Priority\n${low.length ? low.map(fmt).join('\n') : '(none)'}\n\n---\n\n## ✅ Completed\n${done.length ? done.map(fmtDone).join('\n') : '(none)'}`;
+
+  try {
+    // Update Google Doc via Drive API
+    await fetch(`https://www.googleapis.com/upload/drive/v3/files/${config.driveId}?uploadType=media`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${config.apiKey}`, 'Content-Type': 'text/plain' },
+      body: content
+    });
+    showToast('☁️ Synced to Google Drive');
+  } catch(e) {
+    showToast('⚠️ Sync failed — saved locally');
+  }
+}
+
+// ── Google Calendar ──
+async function loadCalendar() {
+  if (!isOnline || !config.apiKey || !config.calId) return;
+  const today = new Date();
+  const start = new Date(today.setHours(0,0,0,0)).toISOString();
+  const end = new Date(today.setHours(23,59,59,999)).toISOString();
+
+  try {
+    const res = await fetch(
+      `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(config.calId)}/events?timeMin=${start}&timeMax=${end}&singleEvents=true&orderBy=startTime&key=${config.apiKey}`
+    );
+    const data = await res.json();
+    const events = data.items || [];
+    const list = document.getElementById('cal-list');
+    if (events.length) {
+      list.innerHTML = events.map(e => `
+        <div class="cal-item">
+          <div class="cal-time">${e.start?.dateTime ? new Date(e.start.dateTime).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}) : 'All day'}</div>
+          <div><div class="cal-title">${e.summary || 'Untitled'}</div><div class="cal-source">Google Calendar</div></div>
+        </div>`).join('');
+    } else {
+      list.innerHTML = '<div class="empty" style="padding:20px"><div class="empty-sub">No events today</div></div>';
+    }
+  } catch(e) { console.log('Calendar error:', e); }
+}
+
+// ── Reminders ──
+function openReminder(id) {
+  remindTaskId = id;
+  document.getElementById('custom-remind-time').style.display = 'none';
+  document.getElementById('modal-remind').classList.add('open');
+}
+
+function setReminder(mins) {
+  if (mins === 'custom') {
+    document.getElementById('custom-remind-time').style.display = 'block';
+    return;
+  }
+  const d = new Date(Date.now() + mins * 60000);
+  document.getElementById('custom-remind-time').value = d.toISOString().slice(0,16);
+}
+
+function confirmReminder() {
+  const val = document.getElementById('custom-remind-time').value;
+  if (!val) { showToast('⚠️ Pick a time'); return; }
+  const t = tasks.find(t => t.id === remindTaskId);
+  if (t) { t.remind = val; saveTasks(); scheduleReminder(t); }
+  closeModal('modal-remind');
+  showToast('⏰ Reminder set!');
+}
+
+function scheduleReminder(task) {
+  const ms = new Date(task.remind).getTime() - Date.now();
+  if (ms <= 0) return;
+  setTimeout(() => {
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification('TaskMaster AI', { body: task.title, icon: '/icon-192.png' });
+    } else {
+      showToast(`⏰ Reminder: ${task.title}`);
+    }
+  }, ms);
+}
+
+function checkReminders() {
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+  tasks.filter(t => t.remind && !t.done).forEach(scheduleReminder);
+}
+
+// ── Navigation ──
+function switchTab(tab, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + tab).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('fab').style.display = tab === 'tasks' ? 'flex' : 'none';
+  if (tab === 'calendar' && isOnline) loadCalendar();
+}
+
+// ── Utils ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function exportTasks() {
+  const data = JSON.stringify(tasks, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `taskmaster-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  showToast('📤 Exported!');
+}
+</script>
+
+</body>
+</html>

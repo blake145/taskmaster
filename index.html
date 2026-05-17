@@ -449,6 +449,13 @@
       </div>
       <div class="config-row">
         <div>
+          <div class="config-label">Google OAuth Client ID</div>
+          <div class="config-sub">For writing to Google Calendar</div>
+        </div>
+        <input class="config-input" id="cfg-oauth-id" placeholder="xxx.apps.googleusercontent.com">
+      </div>
+      <div class="config-row">
+        <div>
           <div class="config-label">Google API Key</div>
           <div class="config-sub">For Calendar & Drive sync</div>
         </div>
@@ -558,6 +565,41 @@
   </div>
 </div>
 
+<!-- Google Calendar Modal -->
+<div class="modal-overlay" id="modal-calendar">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📅 Add to Google Calendar</div>
+    <div id="cal-task-name" style="font-size:14px;color:var(--text2);margin-bottom:16px;font-family:var(--font-mono)"></div>
+
+    <div class="form-group">
+      <label class="form-label">Date & Start Time</label>
+      <input class="form-input" id="cal-start" type="datetime-local">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Duration</label>
+      <div class="remind-options">
+        <div class="remind-opt" onclick="setDuration(15)" id="dur-15">15 min</div>
+        <div class="remind-opt" onclick="setDuration(30)" id="dur-30">30 min</div>
+        <div class="remind-opt" onclick="setDuration(60)" id="dur-60">1 hour</div>
+        <div class="remind-opt" onclick="setDuration(120)" id="dur-120">2 hours</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes (optional)</label>
+      <input class="form-input" id="cal-notes" placeholder="Any extra details...">
+    </div>
+
+    <div id="cal-oauth-warning" class="ai-bubble" style="display:none">
+      <div class="ai-label">⚠️ SETUP NEEDED</div>
+      <div class="ai-text">Add your Google OAuth Client ID in Settings to enable Calendar writing.</div>
+    </div>
+
+    <button class="btn-primary" onclick="addToGoogleCalendar()">📅 Add to Google Calendar</button>
+    <button class="btn-secondary" onclick="closeModal('modal-calendar')">Cancel</button>
+  </div>
+</div>
+
 <!-- Reminder Modal -->
 <div class="modal-overlay" id="modal-remind">
   <div class="modal">
@@ -614,17 +656,137 @@ function loadConfig() {
   document.getElementById('cfg-api-key').value = config.apiKey || '';
   document.getElementById('cfg-cal-id').value = config.calId || 'primary';
   document.getElementById('cfg-anthropic-key').value = config.anthropicKey || '';
+  document.getElementById('cfg-oauth-id').value = config.oauthClientId || '';
 }
 function saveConfig() {
   config = {
     driveId: document.getElementById('cfg-drive-id').value.trim(),
     apiKey: document.getElementById('cfg-api-key').value.trim(),
     calId: document.getElementById('cfg-cal-id').value.trim(),
-    anthropicKey: document.getElementById('cfg-anthropic-key').value.trim()
+    anthropicKey: document.getElementById('cfg-anthropic-key').value.trim(),
+    oauthClientId: document.getElementById('cfg-oauth-id').value.trim()
   };
   localStorage.setItem('tm_config', JSON.stringify(config));
   showToast('✅ Settings saved');
   if (config.apiKey) loadCalendar();
+}
+
+// ── Google Calendar Write ──
+let calTaskId = null;
+let calDuration = 60;
+
+function openCalendarModal(id) {
+  if (!isOnline) { showToast('📵 Requires internet connection'); return; }
+  calTaskId = id;
+  calDuration = 60;
+  const t = tasks.find(t => t.id === id);
+  document.getElementById('cal-task-name').textContent = t ? `"${t.title}"` : '';
+
+  // Default start time = now rounded to next 30min
+  const now = new Date();
+  now.setMinutes(now.getMinutes() < 30 ? 30 : 60, 0, 0);
+  document.getElementById('cal-start').value = now.toISOString().slice(0,16);
+  document.getElementById('cal-notes').value = '';
+
+  // Highlight default duration
+  document.querySelectorAll('.remind-opt').forEach(b => b.style.background = '');
+  document.getElementById('dur-60').style.background = 'rgba(61,90,241,0.2)';
+
+  const warn = document.getElementById('cal-oauth-warning');
+  warn.style.display = config.oauthClientId ? 'none' : 'block';
+
+  document.getElementById('modal-calendar').classList.add('open');
+}
+
+function setDuration(mins) {
+  calDuration = mins;
+  ['15','30','60','120'].forEach(d => {
+    const el = document.getElementById('dur-' + d);
+    if (el) el.style.background = d == mins ? 'rgba(61,90,241,0.2)' : '';
+  });
+}
+
+async function addToGoogleCalendar() {
+  if (!config.oauthClientId) {
+    showToast('⚙️ Add OAuth Client ID in Settings');
+    return;
+  }
+  const startVal = document.getElementById('cal-start').value;
+  if (!startVal) { showToast('⚠️ Pick a date and time'); return; }
+
+  const t = tasks.find(t => t.id === calTaskId);
+  if (!t) return;
+
+  const start = new Date(startVal);
+  const end = new Date(start.getTime() + calDuration * 60000);
+  const notes = document.getElementById('cal-notes').value.trim();
+
+  // Use Google Identity Services to get token
+  try {
+    const token = await getGoogleToken();
+    if (!token) { showToast('⚠️ Google sign-in failed'); return; }
+
+    const calId = config.calId || 'primary';
+    const event = {
+      summary: t.title,
+      description: `Category: ${catLabel(t.category)}\nPriority: ${t.priority}\n${notes ? 'Notes: ' + notes : ''}`.trim(),
+      start: { dateTime: start.toISOString(), timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone },
+      end: { dateTime: end.toISOString(), timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone },
+      reminders: { useDefault: true }
+    };
+
+    const res = await fetch(
+      `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calId)}/events`,
+      {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(event)
+      }
+    );
+
+    if (res.ok) {
+      const data = await res.json();
+      t.calEventId = data.id;
+      t.calEventLink = data.htmlLink;
+      saveTasks();
+      closeModal('modal-calendar');
+      showToast('📅 Added to Google Calendar!');
+    } else {
+      const err = await res.json();
+      showToast('⚠️ Calendar error: ' + (err.error?.message || 'Unknown'));
+    }
+  } catch(e) {
+    showToast('⚠️ Could not add to Calendar');
+    console.error(e);
+  }
+}
+
+let _googleToken = null;
+function getGoogleToken() {
+  return new Promise((resolve) => {
+    if (_googleToken) { resolve(_googleToken); return; }
+    if (!window.google) {
+      // Load Google Identity Services
+      const s = document.createElement('script');
+      s.src = 'https://accounts.google.com/gsi/client';
+      s.onload = () => requestToken(resolve);
+      document.head.appendChild(s);
+    } else {
+      requestToken(resolve);
+    }
+  });
+}
+
+function requestToken(resolve) {
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: config.oauthClientId,
+    scope: 'https://www.googleapis.com/auth/calendar.events',
+    callback: (res) => {
+      if (res.access_token) { _googleToken = res.access_token; resolve(res.access_token); }
+      else resolve(null);
+    }
+  });
+  client.requestAccessToken();
 }
 
 // ── Task CRUD ──
@@ -724,6 +886,7 @@ function renderTask(t) {
       </div>
       <div class="task-actions">
         <button class="task-remind" onclick="openReminder('${t.id}')" title="Set reminder">⏰</button>
+        ${!t.done ? `<button class="task-remind" onclick="openCalendarModal('${t.id}')" title="Add to Google Calendar">📅</button>` : ''}
         <button class="task-del" onclick="deleteTask('${t.id}')" title="Delete">✕</button>
       </div>
     </div>`;

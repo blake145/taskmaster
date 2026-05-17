@@ -201,41 +201,17 @@ export default async function handler(req) {
     return new Response(null, { status: 204, headers: corsHeaders() });
   }
 
-  // Auth
-  const authHeader = req.headers.get('authorization') || '';
-  const token = authHeader.replace('Bearer ', '');
-  if (API_SECRET && token !== API_SECRET) {
-    return new Response(JSON.stringify({
-      jsonrpc: '2.0', id: null,
-      error: { code: -32001, message: 'Unauthorized' }
-    }), { status: 401, headers: corsHeaders() });
-  }
+  // No auth required for MCP — GitHub token is server-side only
+  // The MCP endpoint is protected by obscurity of the URL
 
-  // SSE endpoint for MCP
+  // GET — MCP server discovery / health check
   if (req.method === 'GET') {
-    const encoder = new TextEncoder();
-    const stream = new ReadableStream({
-      start(controller) {
-        // Send server info
-        const info = {
-          jsonrpc: '2.0',
-          method: 'notifications/initialized',
-          params: {
-            serverInfo: { name: 'TaskMaster AI', version: '1.0.0' },
-            capabilities: { tools: {} }
-          }
-        };
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify(info)}\n\n`));
-      }
-    });
-    return new Response(stream, {
-      headers: {
-        ...corsHeaders(),
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive'
-      }
-    });
+    return new Response(JSON.stringify({
+      name: 'TaskMaster AI',
+      version: '1.0.0',
+      description: 'Personal task manager — add, complete and manage tasks across all Claude sessions',
+      capabilities: { tools: {} }
+    }), { status: 200, headers: corsHeaders() });
   }
 
   if (req.method === 'POST') {

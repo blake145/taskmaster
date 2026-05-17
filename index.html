@@ -442,8 +442,8 @@
     <div class="card">
       <div class="config-row">
         <div>
-          <div class="config-label">Google Drive File ID</div>
-          <div class="config-sub">Master Tasks file to sync with</div>
+          <div class="config-label">Google Sheet ID</div>
+          <div class="config-sub">Master Tasks spreadsheet to sync with</div>
         </div>
         <input class="config-input" id="cfg-drive-id" placeholder="File ID..." value="1IHaSqu4zP91HP-hSWeSW9z6Dsu7bzIss3LO5u5aFy40">
       </div>
@@ -655,7 +655,7 @@ function updateOnlineStatus() {
 
 // ── Config ──
 function loadConfig() {
-  document.getElementById('cfg-drive-id').value = config.driveId || '1IHaSqu4zP91HP-hSWeSW9z6Dsu7bzIss3LO5u5aFy40';
+  document.getElementById('cfg-drive-id').value = config.driveId || '1wB4QfzXDa3a98SY7pMa3pY6sbEEpeLGNWYp1X1FZX5U';
   document.getElementById('cfg-api-key').value = config.apiKey || '';
   document.getElementById('cfg-cal-id').value = config.calId || 'primary';
   document.getElementById('cfg-anthropic-key').value = config.anthropicKey || '';
@@ -1274,20 +1274,34 @@ async function syncToDrive() {
 
 async function syncMasterDoc(auth) {
   if (!config.driveId || auth.type !== 'oauth') return;
-  const high = tasks.filter(t => !t.done && t.priority === 'high');
-  const med = tasks.filter(t => !t.done && t.priority === 'med');
-  const low = tasks.filter(t => !t.done && t.priority === 'low');
-  const done = tasks.filter(t => t.done);
-  const fmt = t => `- [ ] ${t.title} [${catLabel(t.category)}] — ${fmtDate(t.created)}${t.remind ? ' ⏰ ' + formatTime(t.remind) : ''}`;
-  const fmtDone = t => `- [x] ${t.title} [${catLabel(t.category)}] — Completed: ${fmtDate(t.completedAt)}`;
-  const content = `# Master Tasks\n\nLast Updated: ${new Date().toLocaleString('en-GB')}\n\n---\n\n## 🔴 High Priority\n${high.length ? high.map(fmt).join('\n') : '(none)'}\n\n## 🟡 Medium Priority\n${med.length ? med.map(fmt).join('\n') : '(none)'}\n\n## 🟢 Low Priority\n${low.length ? low.map(fmt).join('\n') : '(none)'}\n\n---\n\n## ✅ Completed\n${done.length ? done.map(fmtDone).join('\n') : '(none)'}`;
+
+  // Build CSV content from tasks
+  const header = 'ID,Task,Category,Priority,Status,Date Added,Reminder,Completed Date,Calendar Event ID,Notes';
+  const rows = tasks.map((t, i) => {
+    const cat = { work: '💼 Work', email: '📧 Email', code: '💻 Coding' }[t.category] || '💼 Work';
+    const pri = { high: '🔴 High', med: '🟡 Medium', low: '🟢 Low' }[t.priority] || '🔴 High';
+    const status = t.done ? 'Completed' : 'Pending';
+    const added = fmtDate(t.created);
+    const remind = t.remind ? formatTime(t.remind) : '';
+    const completed = t.completedAt ? fmtDate(t.completedAt) : '';
+    const calId = t.calEventId || '';
+    // Escape any commas or quotes in task title
+    const title = `"${(t.title || '').replace(/"/g, '""')}"`;
+    return `${i + 1},${title},"${cat}","${pri}","${status}","${added}","${remind}","${completed}","${calId}",""`; 
+  });
+
+  const csv = [header, ...rows].join('\n');
+
   try {
     await fetch(`https://www.googleapis.com/upload/drive/v3/files/${config.driveId}?uploadType=media`, {
       method: 'PATCH',
-      headers: { 'Authorization': `Bearer ${auth.token}`, 'Content-Type': 'text/plain' },
-      body: content
+      headers: {
+        'Authorization': `Bearer ${auth.token}`,
+        'Content-Type': 'text/csv'
+      },
+      body: csv
     });
-  } catch(e) { console.error('Master doc sync failed:', e); }
+  } catch(e) { console.error('Sheet sync failed:', e); }
 }
 
 // ── Google Calendar ──

@@ -1,5 +1,18 @@
 [
   {
+    "id": "1780313143853",
+    "title": "Connect bberry@wwconnections.org as second Gmail connector in Cowork",
+    "priority": "med",
+    "category": "work",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-06-01T11:25:43.853Z",
+    "updatedAt": "2026-06-01T11:25:43.871Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1780313136067",
     "title": "Submit AWF Concept Note to africanwaterfacility.org ($147,200 — CODEVCOP applies)",
     "priority": "high",

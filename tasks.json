@@ -1,5 +1,18 @@
 [
   {
+    "id": "1780313126555",
+    "title": "Submit Osprey Foundation outreach via ospreyfdn.org/contact + attach executive summary (Gmail draft r8825850977230772451)",
+    "priority": "high",
+    "category": "email",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-06-01T11:25:26.555Z",
+    "updatedAt": "2026-06-01T11:25:26.555Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1780313115444",
     "title": "URGENT: Submit Zayed Sustainability Prize by June 22, 2026 at entry.zayedsustainabilityprize.com (v17 answer sheet ready)",
     "priority": "high",

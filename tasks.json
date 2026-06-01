@@ -1,5 +1,18 @@
 [
   {
+    "id": "1780314041586",
+    "title": "Visit Rawbank branch in Kindu — inquire about IFC $265M SME facility for water/manufacturing sector loan",
+    "priority": "med",
+    "category": "work",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-06-01T11:40:41.586Z",
+    "updatedAt": "2026-06-01T11:40:41.586Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1780314036129",
     "title": "Check BGFA4 open call status at beyondthegrid.africa — confirm if accepting applications for DRC solar enterprise",
     "priority": "high",

@@ -1,5 +1,18 @@
 [
   {
+    "id": "1780314036129",
+    "title": "Check BGFA4 open call status at beyondthegrid.africa — confirm if accepting applications for DRC solar enterprise",
+    "priority": "high",
+    "category": "work",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-06-01T11:40:36.129Z",
+    "updatedAt": "2026-06-01T11:40:36.147Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1780313161102",
     "title": "Follow up with People in Need (PIN) if no response by June 6, 2026",
     "priority": "med",

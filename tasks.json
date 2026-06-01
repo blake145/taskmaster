@@ -1,5 +1,18 @@
 [
   {
+    "id": "1780339413013",
+    "title": "Follow up with XSML Capital if no response by 2026-06-15 — info@xsmlcapital.com",
+    "priority": "med",
+    "category": "email",
+    "done": false,
+    "remind": "2026-06-15T09:00:00",
+    "calEventId": null,
+    "created": "2026-06-01T18:43:33.013Z",
+    "updatedAt": "2026-06-01T18:43:33.013Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1780331893580",
     "title": "Monitor AECF for DRC-specific open call (agribusiness/renewable energy track) — aecfafrica.org",
     "priority": "low",

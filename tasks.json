@@ -1,5 +1,18 @@
 [
   {
+    "id": "1780313154189",
+    "title": "Report back on Rotary Foundation contact outreach (on hold pending prior contact)",
+    "priority": "med",
+    "category": "work",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-06-01T11:25:54.189Z",
+    "updatedAt": "2026-06-01T11:25:54.189Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1780313143853",
     "title": "Connect bberry@wwconnections.org as second Gmail connector in Cowork",
     "priority": "med",

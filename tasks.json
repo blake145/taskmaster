@@ -1,5 +1,18 @@
 [
   {
+    "id": "1780331893580",
+    "title": "Monitor AECF for DRC-specific open call (agribusiness/renewable energy track) — aecfafrica.org",
+    "priority": "low",
+    "category": "work",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-06-01T16:38:13.580Z",
+    "updatedAt": "2026-06-01T16:38:13.580Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1780331887831",
     "title": "Contact Mwinda Fund / ANSER via Odyssey to ask if solar-powered water bottling qualifies as productive use energy — odysseyenergysolutions.com",
     "priority": "med",

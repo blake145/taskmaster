@@ -1,18 +1,5 @@
 [
   {
-    "id": "1780312882817",
-    "title": "Claude read/write test — delete me",
-    "priority": "low",
-    "category": "work",
-    "done": false,
-    "remind": null,
-    "calEventId": null,
-    "created": "2026-06-01T11:21:22.817Z",
-    "updatedAt": "2026-06-01T11:21:22.834Z",
-    "completedAt": null,
-    "source": "claude"
-  },
-  {
     "id": "1779017089267",
     "title": "test 2",
     "priority": "med",

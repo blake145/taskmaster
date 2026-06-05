@@ -5,10 +5,10 @@
     "priority": "high",
     "category": "work",
     "done": false,
-    "remind": null,
+    "remind": "2026-06-19T09:00:00",
     "calEventId": null,
     "created": "2026-06-05T15:47:55.106Z",
-    "updatedAt": "2026-06-05T15:47:55.123Z",
+    "updatedAt": "2026-06-05T15:50:24.931Z",
     "completedAt": null,
     "source": "claude"
   },

@@ -1,5 +1,18 @@
 [
   {
+    "id": "1780674475106",
+    "title": "Visit Ecobank DRC and/or EquityBCDC branch to submit loan application for CODEVCOP/Right Water expansion financing. Bring: SARL registration docs + business plan. Facilities: (1) Ecobank/BII $30M SME — water/industrial eligible; (2) EquityBCDC/IFC $50M local currency SME — reduced FX risk; (3) AGF guarantee via EquityBCDC/Rawbank/TMB — reduces collateral requirement. Confirm if this has already been done.",
+    "priority": "high",
+    "category": "work",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-06-05T15:47:55.106Z",
+    "updatedAt": "2026-06-05T15:47:55.123Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1780397786863",
     "title": "Start FT/MIGA Africa Sustainable Futures Awards 2026 application — Innovation Showcase category. Apply at africasustainablefutures.awardsplatform.com. Deadline June 30.",
     "priority": "med",

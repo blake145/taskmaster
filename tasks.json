@@ -1,5 +1,18 @@
 [
   {
+    "id": "1781085255984",
+    "title": "Paste UPDATED_Project_Instructions_2026-06-10.md into Kindu Projects settings, then start a new chat with BUILD_BRIEF_Grant_Search_v2.md as the first message",
+    "priority": "high",
+    "category": "work",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-06-10T09:54:15.984Z",
+    "updatedAt": "2026-06-10T09:54:16.004Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1781084890604",
     "title": "Subscribe to free grant newsletters from Claude's list (confirmation emails will hit Gmail; daily routine then catches their digests)",
     "priority": "med",

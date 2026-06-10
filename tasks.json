@@ -1,5 +1,18 @@
 [
   {
+    "id": "1781084882870",
+    "title": "Paste revised remote grant-search routine prompt into Claude Code /schedule (Claude will deliver the prompt file)",
+    "priority": "high",
+    "category": "code",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-06-10T09:48:02.870Z",
+    "updatedAt": "2026-06-10T09:48:02.887Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1780816779061",
     "title": "Update RO Filter Expansion tracker — add GDN MIDP 2026: WWC applicant, deadline June 17 2026, grant $25K-$50K (+$200K JSDF follow-on), theme STI for Peace & Human Security, portal https://www.gdn.int/gdac/awardsplatform, prep doc saved in RO filter expansion grant writing folder, start date for application = March 10 2025",
     "priority": "high",

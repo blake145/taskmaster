@@ -4,12 +4,12 @@
     "title": "Create Gmail filter: newsletter digests → skip inbox, apply \"Grant Digests\" label",
     "priority": "med",
     "category": "email",
-    "done": false,
+    "done": true,
     "remind": null,
     "calEventId": null,
     "created": "2026-06-10T11:14:24.118Z",
-    "updatedAt": "2026-06-10T11:14:24.144Z",
-    "completedAt": null,
+    "updatedAt": "2026-06-10T11:18:49.723Z",
+    "completedAt": "2026-06-10T11:18:49.702Z",
     "source": "claude"
   },
   {

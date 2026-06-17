@@ -238,12 +238,12 @@
     "title": "URGENT: Submit Zayed Sustainability Prize by June 22, 2026 at entry.zayedsustainabilityprize.com (v17 answer sheet ready)",
     "priority": "high",
     "category": "work",
-    "done": false,
+    "done": true,
     "remind": "2026-06-15T09:00:00",
     "calEventId": null,
     "created": "2026-06-01T11:25:15.444Z",
-    "updatedAt": "2026-06-01T11:25:15.462Z",
-    "completedAt": null,
+    "updatedAt": "2026-06-17T06:17:25.934Z",
+    "completedAt": "2026-06-17T06:17:25.917Z",
     "source": "claude"
   }
 ]

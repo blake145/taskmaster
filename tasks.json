@@ -169,19 +169,6 @@
     "source": "claude"
   },
   {
-    "id": "1780313161102",
-    "title": "Follow up with People in Need (PIN) if no response by June 6, 2026",
-    "priority": "med",
-    "category": "email",
-    "done": false,
-    "remind": "2026-06-06T09:00:00",
-    "calEventId": null,
-    "created": "2026-06-01T11:26:01.102Z",
-    "updatedAt": "2026-06-01T11:26:01.117Z",
-    "completedAt": null,
-    "source": "claude"
-  },
-  {
     "id": "1780313154189",
     "title": "Report back on Rotary Foundation contact outreach (on hold pending prior contact)",
     "priority": "med",

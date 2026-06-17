@@ -134,12 +134,12 @@
     "title": "Contact XSML Capital Kinshasa office re: ARF IV investment in bottled water line (beverages/food processing — $500K) — info@xsmlcapital.com",
     "priority": "high",
     "category": "email",
-    "done": false,
+    "done": true,
     "remind": null,
     "calEventId": null,
     "created": "2026-06-01T16:38:01.418Z",
-    "updatedAt": "2026-06-01T16:38:01.441Z",
-    "completedAt": null,
+    "updatedAt": "2026-06-17T06:17:29.484Z",
+    "completedAt": "2026-06-17T06:17:29.484Z",
     "source": "claude"
   },
   {

@@ -1,5 +1,18 @@
 [
   {
+    "id": "1783105406490",
+    "title": "Deep code review of trading bot (read-only, no changes)",
+    "priority": "high",
+    "category": "code",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-07-03T19:03:26.490Z",
+    "updatedAt": "2026-07-03T19:03:26.508Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1783083388850",
     "title": "Resume Open WebUI setup: test server boot with Surfshark off, then configure Ollama + web search",
     "priority": "med",

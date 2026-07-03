@@ -1,5 +1,18 @@
 [
   {
+    "id": "1783059500283",
+    "title": "Create an OpenRouter (or Nous Portal) account, get an API key, and paste it into Hermes One > Providers — unblocks full agentic features",
+    "priority": "high",
+    "category": "code",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-07-03T06:18:20.283Z",
+    "updatedAt": "2026-07-03T06:18:20.283Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1783058798097",
     "title": "Check PC RAM to see if a tool-calling model (gemma4:31b, needs 24+ GB) is feasible for agentic Hermes",
     "priority": "low",

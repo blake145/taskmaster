@@ -4,12 +4,12 @@
     "title": "Check PC RAM to see if a tool-calling model (gemma4:31b, needs 24+ GB) is feasible for agentic Hermes",
     "priority": "low",
     "category": "code",
-    "done": false,
+    "done": true,
     "remind": null,
     "calEventId": null,
     "created": "2026-07-03T06:06:38.097Z",
-    "updatedAt": "2026-07-03T06:06:38.097Z",
-    "completedAt": null,
+    "updatedAt": "2026-07-03T06:18:18.090Z",
+    "completedAt": "2026-07-03T06:18:18.073Z",
     "source": "claude"
   },
   {

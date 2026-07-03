@@ -1,5 +1,18 @@
 [
   {
+    "id": "1783083388850",
+    "title": "Resume Open WebUI setup: test server boot with Surfshark off, then configure Ollama + web search",
+    "priority": "med",
+    "category": "code",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-07-03T12:56:28.850Z",
+    "updatedAt": "2026-07-03T12:56:28.867Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1783064255102",
     "title": "Restart trading bot (activates daily-loss cap + Telegram error throttling) — run py_compile check first",
     "priority": "high",

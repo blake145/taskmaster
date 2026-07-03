@@ -69,12 +69,12 @@
     "title": "Add max-daily-loss enforcement to bot.py (config value exists but nothing enforces it; needs bot restart)",
     "priority": "high",
     "category": "code",
-    "done": false,
+    "done": true,
     "remind": null,
     "calEventId": null,
     "created": "2026-07-03T05:17:52.537Z",
-    "updatedAt": "2026-07-03T05:17:52.537Z",
-    "completedAt": null,
+    "updatedAt": "2026-07-03T06:12:55.629Z",
+    "completedAt": "2026-07-03T06:12:55.629Z",
     "source": "claude"
   },
   {

@@ -17,12 +17,12 @@
     "title": "Restart trading bot (activates daily-loss cap + Telegram error throttling) — run py_compile check first",
     "priority": "high",
     "category": "code",
-    "done": false,
+    "done": true,
     "remind": null,
     "calEventId": null,
     "created": "2026-07-03T07:37:35.102Z",
-    "updatedAt": "2026-07-03T07:37:35.119Z",
-    "completedAt": null,
+    "updatedAt": "2026-07-03T13:06:07.782Z",
+    "completedAt": "2026-07-03T13:06:07.767Z",
     "source": "claude"
   },
   {

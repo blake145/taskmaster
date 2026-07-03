@@ -1,5 +1,18 @@
 [
   {
+    "id": "1783055872537",
+    "title": "Add max-daily-loss enforcement to bot.py (config value exists but nothing enforces it; needs bot restart)",
+    "priority": "high",
+    "category": "code",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-07-03T05:17:52.537Z",
+    "updatedAt": "2026-07-03T05:17:52.537Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1783055870759",
     "title": "Fix unreachable trend gate in strategy.py (ER_TREND=0.45 never fires — bot flat since Jun 30, missed SOL +14%)",
     "priority": "high",

@@ -82,12 +82,12 @@
     "title": "Fix unreachable trend gate in strategy.py (ER_TREND=0.45 never fires — bot flat since Jun 30, missed SOL +14%)",
     "priority": "high",
     "category": "code",
-    "done": false,
+    "done": true,
     "remind": null,
     "calEventId": null,
     "created": "2026-07-03T05:17:50.759Z",
-    "updatedAt": "2026-07-03T05:17:50.777Z",
-    "completedAt": null,
+    "updatedAt": "2026-07-03T06:12:53.938Z",
+    "completedAt": "2026-07-03T06:12:53.921Z",
     "source": "claude"
   },
   {

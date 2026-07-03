@@ -1,5 +1,18 @@
 [
   {
+    "id": "1783055875712",
+    "title": "Confirm trades.csv reset was intentional (ledger is header-only, dashboard W/L stats empty)",
+    "priority": "med",
+    "category": "work",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-07-03T05:17:55.712Z",
+    "updatedAt": "2026-07-03T05:17:55.712Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1783055874153",
     "title": "Bot housekeeping: prune _recent_stops list, remove dead short-side/bounce code",
     "priority": "low",

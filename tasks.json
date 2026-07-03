@@ -1,5 +1,18 @@
 [
   {
+    "id": "1783060863006",
+    "title": "Optional: try Settings > Open WebUI > Update to fix the broken embedded server, or uninstall Open WebUI desktop",
+    "priority": "low",
+    "category": "code",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-07-03T06:41:03.006Z",
+    "updatedAt": "2026-07-03T06:41:03.024Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1783059500283",
     "title": "Create an OpenRouter (or Nous Portal) account, get an API key, and paste it into Hermes One > Providers — unblocks full agentic features",
     "priority": "high",

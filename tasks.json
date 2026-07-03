@@ -1,5 +1,18 @@
 [
   {
+    "id": "1783055870759",
+    "title": "Fix unreachable trend gate in strategy.py (ER_TREND=0.45 never fires — bot flat since Jun 30, missed SOL +14%)",
+    "priority": "high",
+    "category": "code",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-07-03T05:17:50.759Z",
+    "updatedAt": "2026-07-03T05:17:50.777Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1781090064118",
     "title": "Create Gmail filter: newsletter digests → skip inbox, apply \"Grant Digests\" label",
     "priority": "med",

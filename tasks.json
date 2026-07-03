@@ -56,12 +56,12 @@
     "title": "Bot housekeeping: prune _recent_stops list, remove dead short-side/bounce code",
     "priority": "low",
     "category": "code",
-    "done": false,
+    "done": true,
     "remind": null,
     "calEventId": null,
     "created": "2026-07-03T05:17:54.153Z",
-    "updatedAt": "2026-07-03T05:17:54.153Z",
-    "completedAt": null,
+    "updatedAt": "2026-07-03T06:12:57.335Z",
+    "completedAt": "2026-07-03T06:12:57.335Z",
     "source": "claude"
   },
   {

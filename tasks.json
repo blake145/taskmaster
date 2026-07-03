@@ -69,12 +69,12 @@
     "title": "Confirm trades.csv reset was intentional (ledger is header-only, dashboard W/L stats empty)",
     "priority": "med",
     "category": "work",
-    "done": false,
+    "done": true,
     "remind": null,
     "calEventId": null,
     "created": "2026-07-03T05:17:55.712Z",
-    "updatedAt": "2026-07-03T05:17:55.712Z",
-    "completedAt": null,
+    "updatedAt": "2026-07-03T07:30:40.208Z",
+    "completedAt": "2026-07-03T07:30:40.194Z",
     "source": "claude"
   },
   {

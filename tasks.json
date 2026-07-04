@@ -1,5 +1,18 @@
 [
   {
+    "id": "1783170172980",
+    "title": "Implement remaining review fixes 5-12 (atomic writes, growth caps, dashboard token auth, regime-flip exits, panel regexes, PID match, interval reload)",
+    "priority": "high",
+    "category": "code",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-07-04T13:02:52.980Z",
+    "updatedAt": "2026-07-04T13:02:52.998Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1783143243718",
     "title": "Implement review fixes 1-4 (candle close, ADX exit gate, ghost-position safety, tp/sl passthrough) + recheck",
     "priority": "high",

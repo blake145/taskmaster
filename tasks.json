@@ -1,5 +1,18 @@
 [
   {
+    "id": "1783233411062",
+    "title": "Fix bot.stop kill-switch non-response (dashboard Kill/restart buttons) — seed prompt ready",
+    "priority": "med",
+    "category": "code",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-07-05T06:36:51.062Z",
+    "updatedAt": "2026-07-05T06:36:51.079Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1783170172980",
     "title": "Implement remaining review fixes 5-12 (atomic writes, growth caps, dashboard token auth, regime-flip exits, panel regexes, PID match, interval reload)",
     "priority": "high",

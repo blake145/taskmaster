@@ -1,5 +1,18 @@
 [
   {
+    "id": "1783612026132",
+    "title": "Restart trading bot to apply Telegram alert-throttle fix in bot.py (run restart_bot.ps1 or launch_bot.vbs)",
+    "priority": "high",
+    "category": "code",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-07-09T15:47:06.132Z",
+    "updatedAt": "2026-07-09T15:47:06.159Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1783585711941",
     "title": "Review reconstructed Kindu project instructions; list any other lost documents; confirm finance-engine status",
     "priority": "high",

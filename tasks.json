@@ -1,5 +1,18 @@
 [
   {
+    "id": "1783578883086",
+    "title": "Recreate Kindu Projects Funding project instructions + lost documents (post-theft rebuild)",
+    "priority": "high",
+    "category": "work",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-07-09T06:34:43.086Z",
+    "updatedAt": "2026-07-09T06:34:43.103Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1783233411062",
     "title": "Fix bot.stop kill-switch non-response (dashboard Kill/restart buttons) — seed prompt ready",
     "priority": "med",

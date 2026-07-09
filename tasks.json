@@ -1,5 +1,18 @@
 [
   {
+    "id": "1783580761840",
+    "title": "Google Cloud setup for tracker script: revoke old service-account key, create new one, save service_account.json to project folder, share 3 tracker Sheets with it (see TRACKER_EDIT_SETUP.md)",
+    "priority": "high",
+    "category": "code",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-07-09T07:06:01.840Z",
+    "updatedAt": "2026-07-09T07:06:01.857Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1783578883086",
     "title": "Recreate Kindu Projects Funding project instructions + lost documents (post-theft rebuild)",
     "priority": "high",

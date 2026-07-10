@@ -1,5 +1,18 @@
 [
   {
+    "id": "1783670011184",
+    "title": "Get Kindu radio broadcast info for DAP budget: number of stations reaching target audience, rate card/price per spot, willingness to provide written quotes (needed: 3 quotes if multiple stations, or sole-source basis if one) — DAP deadline Mon 2026-07-13",
+    "priority": "high",
+    "category": "work",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-07-10T07:53:31.184Z",
+    "updatedAt": "2026-07-10T07:53:31.199Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1783612026132",
     "title": "Restart trading bot to apply Telegram alert-throttle fix in bot.py (run restart_bot.ps1 or launch_bot.vbs)",
     "priority": "high",

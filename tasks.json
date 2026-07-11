@@ -1,5 +1,18 @@
 [
   {
+    "id": "1783742675483",
+    "title": "MBR Global Water Award: manual T&C check at mbrwateraward.ae, then draft entry (Small Projects, $240K tier) — deadline 2026-09-30",
+    "priority": "med",
+    "category": "work",
+    "done": false,
+    "remind": "2026-09-15T09:00:00+02:00",
+    "calEventId": "d5mr5inha85s2cnm7s4efm10p4",
+    "created": "2026-07-11T04:04:35.483Z",
+    "updatedAt": "2026-07-11T04:04:35.499Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1783670011184",
     "title": "Get Kindu radio broadcast info for DAP budget: number of stations reaching target audience, rate card/price per spot, willingness to provide written quotes (needed: 3 quotes if multiple stations, or sole-source basis if one) — DAP deadline Mon 2026-07-13",
     "priority": "high",

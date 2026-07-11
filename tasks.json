@@ -1,5 +1,18 @@
 [
   {
+    "id": "1783746037783",
+    "title": "Paste updated PROJECT INSTRUCTIONS.md text into Claude project settings (Kindu Projects Funding)",
+    "priority": "med",
+    "category": "work",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-07-11T05:00:37.783Z",
+    "updatedAt": "2026-07-11T05:00:37.800Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1783744048324",
     "title": "MBR Global Water Award application — Innovative Projects (Small), CODEVCOP — deadline 2026-09-30",
     "priority": "med",

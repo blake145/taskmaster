@@ -1,5 +1,18 @@
 [
   {
+    "id": "1783744048324",
+    "title": "MBR Global Water Award application — Innovative Projects (Small), CODEVCOP — deadline 2026-09-30",
+    "priority": "med",
+    "category": "work",
+    "done": false,
+    "remind": null,
+    "calEventId": "n3qkc0d59ailfm76mdvk7er14c",
+    "created": "2026-07-11T04:27:28.324Z",
+    "updatedAt": "2026-07-11T04:27:28.324Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1783744046498",
     "title": "Commission pre/post-treatment water quality lab tests (WHO parameters, recognized lab) — MBR award requirement",
     "priority": "high",

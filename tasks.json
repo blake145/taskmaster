@@ -1,5 +1,18 @@
 [
   {
+    "id": "1783742679420",
+    "title": "Exclusion/demotion decision: Global Water Foundation (site dead, likely defunct) — RO row 128",
+    "priority": "low",
+    "category": "work",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-07-11T04:04:39.420Z",
+    "updatedAt": "2026-07-11T04:04:39.420Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1783742677487",
     "title": "Exclusion decision: EYWEP 2026 (ECOWAS bloc, DRC not a member — recommend permanent) — RO row 135",
     "priority": "low",

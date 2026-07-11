@@ -1,5 +1,18 @@
 [
   {
+    "id": "1783742677487",
+    "title": "Exclusion decision: EYWEP 2026 (ECOWAS bloc, DRC not a member — recommend permanent) — RO row 135",
+    "priority": "low",
+    "category": "work",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-07-11T04:04:37.487Z",
+    "updatedAt": "2026-07-11T04:04:37.487Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1783742675483",
     "title": "MBR Global Water Award: manual T&C check at mbrwateraward.ae, then draft entry (Small Projects, $240K tier) — deadline 2026-09-30",
     "priority": "med",

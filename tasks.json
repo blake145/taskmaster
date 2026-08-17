@@ -1,5 +1,18 @@
 [
   {
+    "id": "1786967560004",
+    "title": "Review + approve draft answers to GreenMax/Mwinda PUE stakeholder questionnaire, then submit at ee.kobotoolbox.org/x/cWpWn1w5",
+    "priority": "med",
+    "category": "work",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-08-17T11:52:40.004Z",
+    "updatedAt": "2026-08-17T11:52:40.021Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1783746037783",
     "title": "Paste updated PROJECT INSTRUCTIONS.md text into Claude project settings (Kindu Projects Funding)",
     "priority": "med",

@@ -30,12 +30,12 @@
     "title": "Follow up with Proparco (proparco@proparco.fr) on $3M direct loan inquiry — sent 2026-06-21, 30-day follow-up window (2026-07-21) passed with no reply (BWL row 33)",
     "priority": "high",
     "category": "work",
-    "done": false,
+    "done": true,
     "remind": "2026-08-19T09:00:00+02:00",
     "calEventId": null,
     "created": "2026-08-18T10:15:40.363Z",
-    "updatedAt": "2026-08-18T10:15:40.378Z",
-    "completedAt": null,
+    "updatedAt": "2026-08-18T10:26:14.833Z",
+    "completedAt": "2026-08-18T10:26:14.816Z",
     "source": "claude"
   },
   {

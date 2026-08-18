@@ -420,12 +420,12 @@
     "title": "Paste UPDATED_Project_Instructions_2026-06-10.md into Kindu Projects settings, then start a new chat with BUILD_BRIEF_Grant_Search_v2.md as the first message",
     "priority": "high",
     "category": "work",
-    "done": false,
+    "done": true,
     "remind": null,
     "calEventId": null,
     "created": "2026-06-10T09:54:15.984Z",
-    "updatedAt": "2026-06-10T09:54:16.004Z",
-    "completedAt": null,
+    "updatedAt": "2026-08-18T10:32:53.445Z",
+    "completedAt": "2026-08-18T10:32:53.428Z",
     "source": "claude"
   },
   {

@@ -4,12 +4,12 @@
     "title": "Confirm whether a Munich RE RISK Award 2027 concept note was submitted before Phase I closed 2026-07-31 (ADM row 57) — if not, cycle is missed, Phase II is invite-only",
     "priority": "high",
     "category": "work",
-    "done": false,
+    "done": true,
     "remind": "2026-08-19T09:30:00+02:00",
     "calEventId": null,
     "created": "2026-08-18T10:15:43.009Z",
-    "updatedAt": "2026-08-18T10:15:43.009Z",
-    "completedAt": null,
+    "updatedAt": "2026-08-18T10:24:50.278Z",
+    "completedAt": "2026-08-18T10:24:50.259Z",
     "source": "claude"
   },
   {

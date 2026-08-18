@@ -199,12 +199,12 @@
     "title": "Recreate Kindu Projects Funding project instructions + lost documents (post-theft rebuild)",
     "priority": "high",
     "category": "work",
-    "done": false,
+    "done": true,
     "remind": null,
     "calEventId": null,
     "created": "2026-07-09T06:34:43.086Z",
-    "updatedAt": "2026-07-09T06:34:43.103Z",
-    "completedAt": null,
+    "updatedAt": "2026-08-18T10:32:54.550Z",
+    "completedAt": "2026-08-18T10:32:54.550Z",
     "source": "claude"
   },
   {

@@ -1,5 +1,18 @@
 [
   {
+    "id": "1787049002761",
+    "title": "Check on Bombshell Impact Design Agency \"Sky Is Not The Limit\" grant decision — submitted 2026-08-04 via CODEVCOP, no fixed decision date; check back if no word by 2026-09-18 (ADM row 62)",
+    "priority": "low",
+    "category": "work",
+    "done": false,
+    "remind": "2026-09-18T09:00:00+02:00",
+    "calEventId": null,
+    "created": "2026-08-18T10:30:02.761Z",
+    "updatedAt": "2026-08-18T10:30:02.778Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1787048143009",
     "title": "Confirm whether a Munich RE RISK Award 2027 concept note was submitted before Phase I closed 2026-07-31 (ADM row 57) — if not, cycle is missed, Phase II is invite-only",
     "priority": "high",

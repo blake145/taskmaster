@@ -524,12 +524,12 @@
     "title": "XSML Capital — outreach sent 2026-06-01. Await response from info@xsmlcapital.com re: ARF IV investment in bottled water line",
     "priority": "high",
     "category": "work",
-    "done": false,
+    "done": true,
     "remind": null,
     "calEventId": null,
     "created": "2026-06-01T11:40:36.129Z",
-    "updatedAt": "2026-06-01T18:43:25.573Z",
-    "completedAt": null,
+    "updatedAt": "2026-08-18T10:17:05.634Z",
+    "completedAt": "2026-08-18T10:17:05.634Z",
     "source": "claude"
   },
   {

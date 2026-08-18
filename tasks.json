@@ -1,5 +1,18 @@
 [
   {
+    "id": "1787048142007",
+    "title": "Follow up with Incofin (info@incofin.com) on W2AF equity inquiry — target 2026-07-25 passed, no reply (BWL row 46). Also: LinkedIn outreach to Clement M. Wandera still pending, manual/Blake only",
+    "priority": "high",
+    "category": "work",
+    "done": false,
+    "remind": "2026-08-19T09:15:00+02:00",
+    "calEventId": null,
+    "created": "2026-08-18T10:15:42.007Z",
+    "updatedAt": "2026-08-18T10:15:42.007Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1787048140363",
     "title": "Follow up with Proparco (proparco@proparco.fr) on $3M direct loan inquiry — sent 2026-06-21, 30-day follow-up window (2026-07-21) passed with no reply (BWL row 33)",
     "priority": "high",

@@ -443,14 +443,14 @@
   },
   {
     "id": "1780674475106",
-    "title": "Visit Ecobank DRC and/or EquityBCDC branch to submit loan application for CODEVCOP/Right Water expansion financing. Bring: SARL registration docs + business plan. Facilities: (1) Ecobank/BII $30M SME — water/industrial eligible; (2) EquityBCDC/IFC $50M local currency SME — reduced FX risk; (3) AGF guarantee via EquityBCDC/Rawbank/TMB — reduces collateral requirement. Confirm if this has already been done.",
-    "priority": "high",
+    "title": "ON HOLD (Blake) — Visit Ecobank DRC and/or EquityBCDC branch to submit loan application for CODEVCOP/Right Water expansion financing. Bring: SARL registration docs + business plan. Facilities: (1) Ecobank/BII $30M SME — water/industrial eligible; (2) EquityBCDC/IFC $50M local currency SME — reduced FX risk; (3) AGF guarantee via EquityBCDC/Rawbank/TMB — reduces collateral requirement.",
+    "priority": "low",
     "category": "work",
     "done": false,
     "remind": "2026-06-19T09:00:00",
     "calEventId": null,
     "created": "2026-06-05T15:47:55.106Z",
-    "updatedAt": "2026-06-05T15:50:24.931Z",
+    "updatedAt": "2026-08-18T10:20:01.500Z",
     "completedAt": null,
     "source": "claude"
   },

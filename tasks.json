@@ -82,12 +82,12 @@
     "title": "Commission pre/post-treatment water quality lab tests (WHO parameters, recognized lab) — MBR award requirement",
     "priority": "high",
     "category": "work",
-    "done": false,
+    "done": true,
     "remind": "2026-07-15T09:00:00+02:00",
     "calEventId": "ppuqe4pqnu4cnmhi9fumapv6bc",
     "created": "2026-07-11T04:27:26.498Z",
-    "updatedAt": "2026-07-11T04:27:26.515Z",
-    "completedAt": null,
+    "updatedAt": "2026-08-18T10:17:03.335Z",
+    "completedAt": "2026-08-18T10:17:03.318Z",
     "source": "claude"
   },
   {

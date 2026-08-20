@@ -1,5 +1,18 @@
 [
   {
+    "id": "1787203490590",
+    "title": "🔴 💼 Submit Open Startup Seed Track Technical Assessment form (Openers Initiative/CODEVCOP, RO-195e98) — deadline Mon Aug 24, 12:00 GMT+1 / 14:00 Africa/Johannesburg",
+    "priority": "high",
+    "category": "work",
+    "done": false,
+    "remind": "2026-08-24T12:00:00+02:00",
+    "calEventId": null,
+    "created": "2026-08-20T05:24:50.590Z",
+    "updatedAt": "2026-08-20T05:24:50.606Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1787049002761",
     "title": "Check on Bombshell Impact Design Agency \"Sky Is Not The Limit\" grant decision — submitted 2026-08-04 via CODEVCOP, no fixed decision date; check back if no word by 2026-09-18 (ADM row 62)",
     "priority": "low",

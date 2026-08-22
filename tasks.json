@@ -1,5 +1,18 @@
 [
   {
+    "id": "1787385115624",
+    "title": "Investor deck feedback: pitch deck presents conclusions (unit economics, 6-yr model) without underlying data room; reconcile conflicting margin/cost figures across Business Plan, PDF deck, live Slides, and budget sheet before responding",
+    "priority": "high",
+    "category": "work",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-08-22T07:51:55.624Z",
+    "updatedAt": "2026-08-22T07:51:55.639Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1787203490590",
     "title": "🔴 💼 Submit Open Startup Seed Track Technical Assessment form (Openers Initiative/CODEVCOP, RO-195e98) — deadline Mon Aug 24, 12:00 GMT+1 / 14:00 Africa/Johannesburg",
     "priority": "high",

@@ -13,19 +13,6 @@
     "source": "claude"
   },
   {
-    "id": "1789892781483",
-    "title": "Get comparison quote from a regional/local fabricator for an 8x12in Colombian-precedent diaphragm jig (0.75kW class)",
-    "priority": "med",
-    "category": "work",
-    "done": false,
-    "remind": null,
-    "calEventId": null,
-    "created": "2026-09-20T08:26:21.483Z",
-    "updatedAt": "2026-09-20T08:26:21.483Z",
-    "completedAt": null,
-    "source": "claude"
-  },
-  {
     "id": "1789892780258",
     "title": "Request formal quote + spec sheet from JXSC for JT0.57-1 jig (feed size range, bed area, hutch-water flow/head, weight/footprint, price)",
     "priority": "high",

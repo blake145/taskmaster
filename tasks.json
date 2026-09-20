@@ -1,14 +1,14 @@
 [
   {
     "id": "1789892782561",
-    "title": "Source small solar-compatible jig hutch-water pump (~20-50W, target 10-15 L/min at low head)",
+    "title": "Source jig hutch-water pump once supplier confirms actual flow/head requirement (small solar-compatible unit expected)",
     "priority": "med",
     "category": "work",
     "done": false,
     "remind": null,
     "calEventId": null,
     "created": "2026-09-20T08:26:22.561Z",
-    "updatedAt": "2026-09-20T08:26:22.561Z",
+    "updatedAt": "2026-09-20T08:35:51.910Z",
     "completedAt": null,
     "source": "claude"
   },

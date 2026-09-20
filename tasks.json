@@ -1,5 +1,18 @@
 [
   {
+    "id": "1789892782561",
+    "title": "Source small solar-compatible jig hutch-water pump (~20-50W, target 10-15 L/min at low head)",
+    "priority": "med",
+    "category": "work",
+    "done": false,
+    "remind": null,
+    "calEventId": null,
+    "created": "2026-09-20T08:26:22.561Z",
+    "updatedAt": "2026-09-20T08:26:22.561Z",
+    "completedAt": null,
+    "source": "claude"
+  },
+  {
     "id": "1789892781483",
     "title": "Get comparison quote from a regional/local fabricator for an 8x12in Colombian-precedent diaphragm jig (0.75kW class)",
     "priority": "med",

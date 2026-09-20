@@ -14,14 +14,14 @@
   },
   {
     "id": "1789892780258",
-    "title": "Request formal quote + spec sheet from JXSC for JT0.57-1 jig (feed size range, bed area, hutch-water flow/head, weight/footprint, price)",
+    "title": "Send jig spec sheet (0.5-2 t/h turndown, -1mm feed, 100-micron target recovery, ≤1.5kW solar-compatible) to suppliers (JXSC + others) for quotes",
     "priority": "high",
     "category": "work",
     "done": false,
     "remind": null,
     "calEventId": null,
     "created": "2026-09-20T08:26:20.258Z",
-    "updatedAt": "2026-09-20T08:26:20.273Z",
+    "updatedAt": "2026-09-20T08:35:49.687Z",
     "completedAt": null,
     "source": "claude"
   },
